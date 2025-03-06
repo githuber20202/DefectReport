@@ -14,7 +14,21 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// קבלת דיווח התקלה
+// קבלת נתוני קונפיגורציה (סוגי תקלות ומודולים)
+app.get('/config', (req, res) => {
+    fs.readFile('config.json', (err, data) => {
+        if (err) return res.status(500).json({ error: "Error reading config file" });
+
+        try {
+            const config = JSON.parse(data);
+            res.json(config);
+        } catch (parseError) {
+            res.status(500).json({ error: "Error parsing config JSON" });
+        }
+    });
+});
+
+// קבלת דיווח התקלה ושמירתו
 app.post('/submitBugReport', (req, res) => {
   const { bugType, module, description } = req.body;
   
@@ -27,11 +41,17 @@ app.post('/submitBugReport', (req, res) => {
 
   // שמירה לקובץ JSON
   fs.readFile('bugReports.json', (err, data) => {
-    if (err) throw err;
-    let reports = JSON.parse(data);
+    let reports = [];
+    if (!err) {
+        try {
+            reports = JSON.parse(data);
+        } catch (parseError) {
+            return res.status(500).json({ error: "Error parsing bug reports JSON" });
+        }
+    }
     reports.push(bugReport);
     fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), (err) => {
-      if (err) throw err;
+      if (err) return res.status(500).json({ error: "Error saving report" });
       res.json({ success: true });
     });
   });
