@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // ✅ שימוש ב-GitHub Pages בלי שרת
-const API_BASE = "https://githuber20202.github.io/DefectReport";
+const API_BASE = "https://defectreport.onrender.com";
 
 // ✅ טעינת הנתונים ישירות מהקובץ `config.json`
 function loadConfigData() {
