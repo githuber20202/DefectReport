@@ -2,29 +2,29 @@ document.addEventListener("DOMContentLoaded", function() {
     loadConfigData();
 });
 
-// ✅ עדכון API_BASE לכתובת GitHub Pages
+// ✅ שימוש ב-GitHub Pages בלי שרת
 const API_BASE = "https://githuber20202.github.io/DefectReport";
 
-// ✅ טעינת הנתונים מ-config.json
+// ✅ טעינת הנתונים ישירות מהקובץ `config.json`
 function loadConfigData() {
     fetch(`${API_BASE}/config.json`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
+            console.log("Config Loaded:", data); // 🔍 בדיקה
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
         .catch(error => console.error('Error loading config:', error));
 }
 
-// ✅ מילוי הרשימות הנפתחות
+// ✅ מילוי השדות בטופס
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
-    selectElement.innerHTML = ""; // ניקוי התוכן הקודם
+    if (!selectElement) {
+        console.error(`Element #${selectId} not found`);
+        return;
+    }
+    selectElement.innerHTML = ""; // ניקוי הקיים
     options.forEach(option => {
         const optionElement = document.createElement("option");
         optionElement.value = option;
@@ -33,14 +33,13 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ✅ שליחת הדיווח לשרת (GitHub Pages לא תומך בכתיבה, דורש Backend חיצוני)
+// ❌ מניעת שליחת דיווחים (כי אין שרת ב-GitHub Pages)
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
-
     alert("🚨 שליחת דיווחים לא נתמכת ב-GitHub Pages! יש צורך בשרת Backend אמיתי.");
 });
 
-// ✅ כפתור להורדת Excel (GitHub Pages לא תומך)
+// ❌ מניעת הורדת Excel (כי אין שרת מאחסן נתונים)
 document.getElementById("downloadExcel").addEventListener("click", function() {
     alert("🚨 הורדת Excel לא נתמכת ב-GitHub Pages! יש צורך בשרת Backend אמיתי.");
 });
