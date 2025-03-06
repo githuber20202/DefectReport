@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function loadConfigData() {
-  fetch("http://localhost:3000/config")
+  fetch("https://github.com/githuber20202/DefectReport/config")
       .then(response => response.json())
       .then(data => {
           populateSelect("bugType", data.issueTypes);
