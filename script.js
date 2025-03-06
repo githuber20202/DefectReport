@@ -2,15 +2,20 @@ document.addEventListener("DOMContentLoaded", function() {
     loadConfigData();
 });
 
-// ✅ שימוש ב-GitHub Pages בלי שרת
-const API_BASE = "https://defectreport.onrender.com";
+// ✅ כתובת ה-API החדשה שמחוברת ל-Render
+const API_BASE = "https://defectreport.onrender.com"; 
 
-// ✅ טעינת הנתונים ישירות מהקובץ `config.json`
+// ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
-    fetch(`${API_BASE}/config.json`)
-        .then(response => response.json())
+    fetch(`${API_BASE}/config`) // 🔄 שינוי הנתיב לקריאה נכונה
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log("Config Loaded:", data); // 🔍 בדיקה
+            console.log("Config Loaded:", data); // 🔍 בדיקה שהנתונים נטענים
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
@@ -33,13 +38,34 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ❌ מניעת שליחת דיווחים (כי אין שרת ב-GitHub Pages)
+// ✅ שליחת דיווח לשרת ב-Render
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
-    alert("🚨 שליחת דיווחים לא נתמכת ב-GitHub Pages! יש צורך בשרת Backend אמיתי.");
+
+    const formData = new FormData(this);
+
+    fetch(`${API_BASE}/submitBugReport`, {
+        method: "POST",
+        body: JSON.stringify({
+            bugType: formData.get("bugType"),
+            module: formData.get("module"),
+            description: formData.get("description")
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("confirmationMessage").style.display = "block";
+            console.log("Report saved successfully!");
+        } else {
+            console.error("Error saving report:", data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 });
 
-// ❌ מניעת הורדת Excel (כי אין שרת מאחסן נתונים)
+// ✅ כפתור להורדת Excel מהשרת
 document.getElementById("downloadExcel").addEventListener("click", function() {
-    alert("🚨 הורדת Excel לא נתמכת ב-GitHub Pages! יש צורך בשרת Backend אמיתי.");
+    window.location.href = `${API_BASE}/downloadExcel`;
 });
