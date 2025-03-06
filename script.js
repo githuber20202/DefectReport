@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function loadConfigData() {
-  fetch("/config")
+  fetch("http://localhost:3000/config")
       .then(response => response.json())
       .then(data => {
           populateSelect("bugType", data.issueTypes);
