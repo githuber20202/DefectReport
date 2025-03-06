@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>דיווח תקלה</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיווח תקלות</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <form id="bugReportForm">
-    <div>
-      <h1>דיווח תקלות</h1>
-    </div>
+    <form id="bugReportForm">
+        <div>
+            <h1>דיווח תקלות</h1>
+        </div>
 
-    <label for="bugType">סוג תקלה:</label>
-    <select id="bugType" name="bugType">
-      <option value="">טוען...</option>
-    </select><br><br>
+        <label for="bugType">סוג תקלה:</label>
+        <select id="bugType" name="bugType"></select><br><br>
 
-    <label for="module">מודול מערכת:</label>
-    <select id="module" name="module">
-      <option value="">טוען...</option>
-    </select><br><br>
+        <label for="module">מודול מערכת:</label>
+        <select id="module" name="module"></select><br><br>
 
-    <label for="description">תיאור התקלה:</label>
-    <textarea id="description" name="description"></textarea><br><br>
+        <label for="description">תיאור התקלה:</label>
+        <textarea id="description" name="description"></textarea><br><br>
 
-    <label for="fileUpload">העלאת קובץ:</label>
-    <input type="file" id="fileUpload" name="fileUpload"><br><br>
+        <!-- ✅ כפתור שליחת דיווח -->
+        <button type="submit">שלח דיווח</button>
 
-    <button type="submit">שלח דיווח</button>
-  </form>
+        <!-- ✅ הודעת הצלחה אחרי השליחה -->
+        <p id="confirmationMessage" style="display: none; color: green; margin-top: 10px;">✅ הדיווח נשמר בהצלחה!</p>
 
-  <div id="confirmationMessage" style="display: none;">הדיווח נשלח בהצלחה!</div>
+        <!-- ✅ כפתור הורדת קובץ תקלות לאחר שליחת דיווח -->
+        <button id="downloadExcel">📥 הורדת קובץ תקלות</button>
+    </form>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,20 +1,32 @@
-fs.readFile('bugReports.json', (err, data) => {
-  if (err) {
-      return res.status(500).json({ error: "Error reading the file" });
+[
+  {
+    "bugType": "שגיאה קריטית",
+    "module": "מודול התחברות",
+    "description": "תקלה בהתחברות למערכת",
+    "timestamp": "2024-03-06T12:00:00Z"
+  },
+  {
+    "bugType": "תקלה קריטית",
+    "module": "דוגמה א",
+    "description": "fghd",
+    "timestamp": "2025-03-06T17:32:40.610Z"
+  },
+  {
+    "bugType": "תקלה קריטית",
+    "module": "דוגמה א",
+    "description": "fghd",
+    "timestamp": "2025-03-06T17:32:47.481Z"
+  },
+  {
+    "bugType": "בעיה בהתחברות",
+    "module": "דוגמה א",
+    "description": "כגע",
+    "timestamp": "2025-03-06T17:39:10.026Z"
+  },
+  {
+    "bugType": "בעיה בהתחברות",
+    "module": "דוגמה א",
+    "description": "כגע",
+    "timestamp": "2025-03-06T17:39:12.765Z"
   }
-  let reports = [];
-  try {
-      reports = JSON.parse(data);
-  } catch (parseError) {
-      return res.status(500).json({ error: "Error parsing JSON" });
-  }
-  
-  const ws = XLSX.utils.json_to_sheet(reports);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Bug Reports");
-
-  const excelFile = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
-  res.setHeader('Content-Disposition', 'attachment; filename=bugReports.xlsx');
-  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  res.send(excelFile);
-});
+]

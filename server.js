@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const cors = require('cors'); // ✅ הוספת CORS
+const cors = require('cors');
+const XLSX = require('xlsx');
 
 const app = express();
 const port = 3000;
@@ -33,7 +34,34 @@ app.get('/config', (req, res) => {
     });
 });
 
-// הפעלת השרת
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// ✅ API לשמירת דיווחים
+app.post('/submitBugReport', (req, res) => {
+    const { bugType, module, description } = req.body;
+    if (!bugType || !module || !description) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const bugReport = { bugType, module, description, timestamp: new Date().toISOString() };
+    fs.readFile('bugReports.json', (err, data) => {
+        let reports = !err && data.length ? JSON.parse(data) : [];
+        reports.push(bugReport);
+        fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), () => {
+            res.json({ success: true });
+        });
+    });
 });
+
+// ✅ API להורדת Excel
+app.get('/downloadExcel', (req, res) => {
+    fs.readFile('bugReports.json', (err, data) => {
+        const reports = !err && data.length ? JSON.parse(data) : [];
+        const ws = XLSX.utils.json_to_sheet(reports);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Bug Reports");
+        res.setHeader('Content-Disposition', 'attachment; filename=bugReports.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(XLSX.write(wb, { bookType: "xlsx", type: "buffer" }));
+    });
+});
+
+app.listen(port, () => console.log(`Server running at http://localhost:${port}`));

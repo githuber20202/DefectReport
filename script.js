@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
   loadConfigData();
 });
 
+// טעינת הנתונים מ-config.json
 function loadConfigData() {
-  fetch("https://githuber20202.github.io/DefectReport/config.json")
+  fetch("http://localhost:3000/config")
       .then(response => response.json())
       .then(data => {
           populateSelect("bugType", data.issueTypes);
@@ -23,13 +24,13 @@ function populateSelect(selectId, options) {
   });
 }
 
-// שליחת הטופס
+// שליחת הדיווח לשרת
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
   event.preventDefault();
-  
+
   const formData = new FormData(this);
 
-  fetch("/submitBugReport", {
+  fetch("http://localhost:3000/submitBugReport", {
       method: "POST",
       body: JSON.stringify({
           bugType: formData.get("bugType"),
@@ -42,7 +43,14 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
   .then(data => {
       if (data.success) {
           document.getElementById("confirmationMessage").style.display = "block";
+      } else {
+          console.error("Error saving report:", data.error);
       }
   })
   .catch(error => console.error('Error:', error));
+});
+
+// ✅ כפתור להורדת Excel
+document.getElementById("downloadExcel").addEventListener("click", function() {
+  window.location.href = "http://localhost:3000/downloadExcel";
 });
