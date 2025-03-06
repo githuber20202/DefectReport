@@ -5,22 +5,18 @@ const cors = require('cors');
 const XLSX = require('xlsx');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // ✅ הפעלת השרת בפורט ש-Render מספק
+const host = '0.0.0.0'; // ✅ הפעלת השרת כך שיקבל חיבורים חיצוניים
 
-// ✅ הפעלת CORS לכל הבקשות
 app.use(cors());
-
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// דף הבית
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.send("Server is running! 🚀");
 });
 
-// ✅ API להחזרת הקונפיגורציה
 app.get('/config', (req, res) => {
     fs.readFile('config.json', 'utf8', (err, data) => {
         if (err) return res.status(500).json({ error: "Error reading config file" });
@@ -34,7 +30,6 @@ app.get('/config', (req, res) => {
     });
 });
 
-// ✅ API לשמירת דיווחים
 app.post('/submitBugReport', (req, res) => {
     const { bugType, module, description } = req.body;
     if (!bugType || !module || !description) {
@@ -61,7 +56,6 @@ app.post('/submitBugReport', (req, res) => {
     });
 });
 
-// ✅ API להורדת Excel
 app.get('/downloadExcel', (req, res) => {
     fs.readFile('bugReports.json', 'utf8', (err, data) => {
         let reports = [];
@@ -85,5 +79,5 @@ app.get('/downloadExcel', (req, res) => {
     });
 });
 
-// ✅ הפעלת השרת
-app.listen(port, () => console.log(`Server running at https://localhost:${port}`));
+// ✅ עדכון השרת להאזנה לכל חיבורי הרשת (ולא רק localhost)
+app.listen(port, host, () => console.log(`Server running at http://${host}:${port}`));
