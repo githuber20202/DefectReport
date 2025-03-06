@@ -86,4 +86,4 @@ app.get('/downloadExcel', (req, res) => {
 });
 
 // ✅ הפעלת השרת
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`Server running at https://localhost:${port}`));
