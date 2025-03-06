@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // טעינת הנתונים מ-config.json
 function loadConfigData() {
-  fetch("http://localhost:3000/config")
+  fetch("http://githuber20202.github.io/DefectReport/config")
       .then(response => response.json())
       .then(data => {
           populateSelect("bugType", data.issueTypes);
@@ -30,7 +30,7 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
 
   const formData = new FormData(this);
 
-  fetch("http://localhost:3000/submitBugReport", {
+  fetch("http://githuber20202.github.io/DefectReport/submitBugReport", {
       method: "POST",
       body: JSON.stringify({
           bugType: formData.get("bugType"),
@@ -52,5 +52,5 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
 
 // ✅ כפתור להורדת Excel
 document.getElementById("downloadExcel").addEventListener("click", function() {
-  window.location.href = "http://localhost:3000/downloadExcel";
+  window.location.href = "http://githuber20202.github.io/DefectReport/downloadExcel";
 });
