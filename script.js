@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", function() {
     loadConfigData();
 });
 
-// ✅ כתובת ה-API החדשה שמחוברת ל-Render
+// ✅ כתובת ה-API המחוברת ל-Render
 const API_BASE = "https://defectreport.onrender.com"; 
 
 // ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
-    fetch(`${API_BASE}/config`) // 🔄 שינוי הנתיב לקריאה נכונה
+    fetch(`${API_BASE}/config`)  // 🔄 שינוי הנתיב לקריאה נכונה
         .then(response => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
