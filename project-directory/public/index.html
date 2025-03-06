@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דיווח תקלה</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+  <form id="bugReportForm">
+    <div>
+      <h1>דיווח תקלות</h1>
+    </div>
+    <label for="bugType">סוג תקלה:</label>
+    <select id="bugType" name="bugType">
+      <!-- סוגי תקלה ייטענו מה-Backend -->
+    </select><br><br>
+
+    <label for="module">מודול מערכת:</label>
+    <select id="module" name="module">
+      <!-- מודולי מערכת ייטענו מה-Backend -->
+    </select><br><br>
+
+    <label for="description">תיאור התקלה:</label>
+    <textarea id="description" name="description"></textarea><br><br>
+
+    <label for="fileUpload">העלאת קובץ:</label>
+    <input type="file" id="fileUpload" name="fileUpload"><br><br>
+
+    <button type="submit">שלח דיווח</button>
+  </form>
+
+  <div id="confirmationMessage" style="display: none;">הדיווח נשלח בהצלחה!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>

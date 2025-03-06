@@ -1,0 +1,74 @@
+/* עיצוב כללי לדף */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* כותרת הדף */
+  h1 {
+    text-align: center;
+    color: #333;
+    bottom: 100px;
+  }
+  
+  /* טופס דיווח התקלה */
+  form {
+    background-color: #fff;
+    padding: 80px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 100%;
+  }
+  
+  /* כל תווית (label) */
+  label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin: 10px 0 5px;
+    direction: rtl;
+  }
+  
+  /* שדות הבחירה (select) ושדות טקסט (textarea) */
+  select, textarea, input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+    direction: rtl;
+  }
+  
+  /* כפתור "שלח דיווח" */
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* הודעת אישור לאחר שליחה */
+  #confirmationMessage {
+    text-align: center;
+    color: green;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
