@@ -1,4 +1,11 @@
 /* עיצוב כללי לדף */
+#fileUpload {
+    display: none;
+}
+label[for="fileUpload"] {
+    display: none;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -71,4 +78,4 @@ body {
     font-size: 18px;
     margin-top: 20px;
   }
-  
+
