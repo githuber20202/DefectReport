@@ -23,12 +23,15 @@ app.get('/', (req, res) => {
 // ✅ API להחזרת הקונפיגורציה
 app.get('/config', (req, res) => {
     fs.readFile('config.json', (err, data) => {
-        if (err) return res.status(500).json({ error: "Error reading config file" });
-
+        if (err) {
+            console.error("❌ Error reading config file:", err);
+            return res.status(500).json({ error: "Error reading config file" });
+        }
         try {
             const config = JSON.parse(data);
             res.json(config);
         } catch (parseError) {
+            console.error("❌ Error parsing config JSON:", parseError);
             res.status(500).json({ error: "Error parsing config JSON" });
         }
     });
@@ -41,24 +44,41 @@ app.post('/submitBugReport', (req, res) => {
         return res.status(400).json({ error: "All fields are required" });
     }
 
-    const bugReport = { bugType, module, description, timestamp: new Date().toISOString() };
+    const bugReport = { 
+        bugType: bugType.trim(), 
+        module: module.trim(), 
+        description: description.trim(), 
+        timestamp: new Date().toISOString() 
+    };
 
     fs.readFile('bugReports.json', (err, data) => {
-        let reports = !err && data.length ? JSON.parse(data) : [];
+        let reports = [];
+        if (!err && data.length) {
+            try {
+                reports = JSON.parse(data);
+            } catch (parseError) {
+                console.error("❌ Error parsing bugReports.json:", parseError);
+                return res.status(500).json({ error: "Error parsing bug reports file" });
+            }
+        }
 
-        // ✅ בדיקה אם התקלה כבר קיימת
+        // ✅ בדיקה אם התקלה כבר קיימת, תוך התחשבות ברווחים ורגישות אותיות
         const exists = reports.some(report =>
-            report.bugType === bugReport.bugType &&
-            report.module === bugReport.module &&
-            report.description === bugReport.description
+            report.bugType.toLowerCase() === bugReport.bugType.toLowerCase() &&
+            report.module.toLowerCase() === bugReport.module.toLowerCase() &&
+            report.description.toLowerCase() === bugReport.description.toLowerCase()
         );
 
         if (exists) {
-            return res.status(409).json({ error: "Duplicate report detected" }); // קוד 409 = Conflict
+            return res.status(409).json({ error: "Duplicate report detected" });
         }
 
         reports.push(bugReport);
-        fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), () => {
+        fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), (writeErr) => {
+            if (writeErr) {
+                console.error("❌ Error writing to bugReports.json:", writeErr);
+                return res.status(500).json({ error: "Error saving bug report" });
+            }
             res.json({ success: true });
         });
     });
@@ -67,10 +87,27 @@ app.post('/submitBugReport', (req, res) => {
 // ✅ API להורדת Excel
 app.get('/downloadExcel', (req, res) => {
     fs.readFile('bugReports.json', (err, data) => {
-        const reports = !err && data.length ? JSON.parse(data) : [];
-        const ws = XLSX.utils.json_to_sheet(reports);
+        let reports = [];
+        if (!err && data.length) {
+            try {
+                reports = JSON.parse(data);
+            } catch (parseError) {
+                console.error("❌ Error parsing bugReports.json:", parseError);
+                return res.status(500).json({ error: "Error parsing bug reports file" });
+            }
+        }
+
+        if (reports.length === 0) {
+            return res.status(404).json({ error: "No reports found" });
+        }
+
+        // ✅ יצירת קובץ Excel מסודר
+        const ws = XLSX.utils.json_to_sheet(reports, {
+            header: ["bugType", "module", "description", "timestamp"]
+        });
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Bug Reports");
+
         res.setHeader('Content-Disposition', 'attachment; filename=bugReports.xlsx');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.send(XLSX.write(wb, { bookType: "xlsx", type: "buffer" }));
@@ -78,4 +115,4 @@ app.get('/downloadExcel', (req, res) => {
 });
 
 // ✅ הפעלת השרת
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`✅ Server running at http://localhost:${port}`));
