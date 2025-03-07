@@ -2,21 +2,14 @@ document.addEventListener("DOMContentLoaded", function() {
     loadApiConfig();
 });
 
-// ✅ טעינת כתובת ה-API מתוך `config.json`
 let API_BASE = "";
 
 function loadApiConfig() {
     fetch("config.json")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("❌ Failed to load config.json");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(config => {
             console.log("✅ Config Loaded:", config);
 
-            // ✅ קביעת כתובת ה-API לפי הסביבה
             if (window.location.hostname.includes("github.io")) {
                 API_BASE = config.environments.githubPages;
             } else if (window.location.hostname.includes("localhost")) {
@@ -26,14 +19,11 @@ function loadApiConfig() {
             }
 
             console.log("✅ API Base URL Selected:", API_BASE);
-
-            // ✅ קריאה לפונקציה לאחר טעינת ה-API Base
             loadConfigData();
         })
         .catch(error => console.error("❌ Error loading API config:", error));
 }
 
-// ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
     if (!API_BASE) {
         console.error("❌ API Base URL is not loaded yet.");
@@ -41,28 +31,22 @@ function loadConfigData() {
     }
 
     fetch(`${API_BASE}/config`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("❌ Network response was not ok");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log("✅ Server Config Loaded:", data);
+            console.log("✅ Config Data Loaded:", data);
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
         .catch(error => console.error('❌ Error loading config:', error));
 }
 
-// ✅ מילוי שדות בחירה בטופס
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
         console.error(`❌ Element #${selectId} not found`);
         return;
     }
-    selectElement.innerHTML = ""; // ניקוי הקיים
+    selectElement.innerHTML = "";
     options.forEach(option => {
         const optionElement = document.createElement("option");
         optionElement.value = option;
@@ -71,7 +55,6 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ✅ שליחת דיווח לשרת
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -103,7 +86,6 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
     .catch(error => console.error('❌ Error:', error));
 });
 
-// ✅ כפתור להורדת Excel מהשרת
 document.getElementById("downloadExcel").addEventListener("click", function() {
     if (!API_BASE) {
         console.error("❌ API Base URL is not loaded yet.");
