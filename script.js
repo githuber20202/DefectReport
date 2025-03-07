@@ -1,28 +1,24 @@
 let API_BASE = "";
 
 document.addEventListener("DOMContentLoaded", function() {
-    loadApiConfig();
+    loadApiConfig().then(() => {
+        console.log("✅ API Base URL Loaded:", API_BASE);
+        loadConfigData();
+    }).catch(error => console.error("❌ Error loading API config:", error));
 });
 
 // ✅ Load API Configuration from config.json
 function loadApiConfig() {
-    fetch("config.json")
+    return fetch("config.json")
         .then(response => response.json())
         .then(config => {
             const env = window.location.hostname.includes("github.io") ? "githubPages"
                       : window.location.hostname.includes("localhost") ? "local"
                       : "production";
-            
-            API_BASE = config.environments[env];
-            console.log("🔹 API Base URL Selected:", API_BASE);
-            
-            if (!API_BASE) {
-                throw new Error("API Base URL is not defined.");
-            }
-            
-            loadConfigData();
-        })
-        .catch(error => console.error("❌ Error loading API config:", error));
+
+            API_BASE = config.environments[env] || "";
+            if (!API_BASE) throw new Error("API Base URL is undefined.");
+        });
 }
 
 // ✅ Load dynamic config data (issue types, modules, etc.)
@@ -58,7 +54,7 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ✅ Prevent duplicate submissions
+// ✅ Submit bug report
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -86,13 +82,13 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
             console.error("❌ Error saving report:", data.error);
         }
     })
-    .catch(error => console.error("❌ Error:", error))
+    .catch(error => console.error('❌ Error:', error))
     .finally(() => {
         setTimeout(() => submitButton.disabled = false, 3000);
     });
 });
 
-// ✅ Handle Excel download
+// ✅ Download Excel
 document.getElementById("downloadExcel").addEventListener("click", function() {
     window.location.href = `${API_BASE}/downloadExcel`;
 });
