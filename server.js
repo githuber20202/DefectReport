@@ -5,69 +5,84 @@ const cors = require('cors');
 const XLSX = require('xlsx');
 
 const app = express();
-const port = process.env.PORT || 3000;
-const host = '0.0.0.0';
+const port = 3000;
 
+// ✅ הפעלת CORS לכל הבקשות
 app.use(cors());
+
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// דף הבית
 app.get('/', (req, res) => {
-    res.send("Server is running! 🚀");
+  res.sendFile(__dirname + '/index.html');
 });
 
+// ✅ API להחזרת הקונפיגורציה
 app.get('/config', (req, res) => {
-    fs.readFile('config.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error("❌ Error reading config.json, sending default config.");
-            return res.json({ "apiBaseUrl": "https://defectreport.onrender.com" });
+    fs.readFile('config.json', (err, data) => {
+        if (err) return res.status(500).json({ error: "Error reading config file" });
+
+        try {
+            const config = JSON.parse(data);
+            res.json(config);
+        } catch (parseError) {
+            res.status(500).json({ error: "Error parsing config JSON" });
         }
-        res.json(JSON.parse(data));
     });
 });
 
+// ✅ API לשמירת דיווחים
 app.post('/submitBugReport', (req, res) => {
     const { bugType, module, description } = req.body;
-
     if (!bugType || !module || !description) {
-        return res.status(400).json({ error: "❌ All fields are required" });
+        return res.status(400).json({ error: "All fields are required" });
     }
 
     const bugReport = { bugType, module, description, timestamp: new Date().toISOString() };
-
     fs.readFile('bugReports.json', 'utf8', (err, data) => {
-        let reports = [];
-        if (!err && data) {
-            try {
-                reports = JSON.parse(data);
-            } catch (parseError) {
-                console.error("❌ Error parsing bugReports.json, resetting file.");
-                reports = [];
-            }
+        let reports = !err && data ? JSON.parse(data) : [];
+
+        // 🔹 בדיקה אם התקלה כבר קיימת
+        const exists = reports.some(report => 
+            report.bugType === bugType && 
+            report.module === module && 
+            report.description === description
+        );
+        if (exists) {
+            return res.status(409).json({ error: "Report already exists" });
         }
 
         reports.push(bugReport);
         fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), (err) => {
-            if (err) return res.status(500).json({ error: "❌ Error saving report" });
+            if (err) return res.status(500).json({ error: "Error saving report" });
             res.json({ success: true });
         });
     });
 });
 
+// ✅ API להורדת Excel
 app.get('/downloadExcel', (req, res) => {
-    fs.readFile('bugReports.json', 'utf8', (err, data) => {
-        let reports = !err && data ? JSON.parse(data) : [];
-        const ws = XLSX.utils.json_to_sheet(reports);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Bug Reports");
+    fs.readFile('bugReports.json', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: "Error reading bug reports file" });
+        }
 
-        res.setHeader('Content-Disposition', 'attachment; filename=bugReports.xlsx');
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        try {
+            const reports = JSON.parse(data);
+            const ws = XLSX.utils.json_to_sheet(reports);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Bug Reports");
 
-        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
-        res.send(excelBuffer);
+            res.setHeader('Content-Disposition', 'attachment; filename=bugReports.xlsx');
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.send(XLSX.write(wb, { bookType: "xlsx", type: "buffer" }));
+        } catch (parseError) {
+            return res.status(500).json({ error: "Error parsing JSON" });
+        }
     });
 });
 
-app.listen(port, host, () => console.log(`Server running at http://${host}:${port}`));
+app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
