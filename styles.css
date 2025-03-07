@@ -18,10 +18,10 @@ h1 {
   display: inline-block;
   font-size: 2em;
   transition: transform 0.3s ease-in-out;
-  padding-right: 40px; /* מקום לאייקון */
+  padding-right: 120px; /* מקום לאייקון */
 }
 
-/* ✅ הוספת תמונת זכוכית מגדלת */
+/* ✅ כרגע זה איפרון - הוספת תמונת זכוכית מגדלת */
 h1::after {
   content: "";
   position: absolute;
@@ -38,7 +38,7 @@ h1::after {
 
 /* ✅ טופס דיווח תקלות */
 form {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
