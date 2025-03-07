@@ -1,46 +1,49 @@
 document.addEventListener("DOMContentLoaded", function() {
-    loadConfigData();
+    loadApiConfig();
 });
 
-// ✅ משתנה שיכיל את כתובת ה-API שנבחרה
+// ✅ טעינת כתובת ה-API מתוך `config.json`
 let API_BASE = "";
 
-// ✅ טעינת הנתונים מ-`config.json`
-fetch("config.json")
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("❌ Failed to load API configuration.");
-        }
-        return response.json();
-    })
-    .then(config => {
-        console.log("✅ Config Loaded:", config);
+function loadApiConfig() {
+    fetch("config.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("❌ Failed to load config.json");
+            }
+            return response.json();
+        })
+        .then(config => {
+            console.log("✅ Config Loaded:", config);
 
-        // ✅ זיהוי סביבה אוטומטי
-        if (window.location.hostname.includes("github.io")) {
-            API_BASE = config.environments.githubPages;
-        } else if (window.location.hostname.includes("localhost")) {
-            API_BASE = config.environments.local;
-        } else {
-            API_BASE = config.environments.production;
-        }
+            // ✅ קביעת כתובת ה-API לפי הסביבה
+            if (window.location.hostname.includes("github.io")) {
+                API_BASE = config.environments.githubPages;
+            } else if (window.location.hostname.includes("localhost")) {
+                API_BASE = config.environments.local;
+            } else {
+                API_BASE = config.environments.production;
+            }
 
-        console.log("✅ API Base URL Selected:", API_BASE);
-        loadServerConfig();
-    })
-    .catch(error => console.error("❌ Error loading API config:", error));
+            console.log("✅ API Base URL Selected:", API_BASE);
+
+            // ✅ קריאה לפונקציה לאחר טעינת ה-API Base
+            loadConfigData();
+        })
+        .catch(error => console.error("❌ Error loading API config:", error));
+}
 
 // ✅ טעינת הנתונים מהשרת
-function loadServerConfig() {
+function loadConfigData() {
     if (!API_BASE) {
-        console.error("❌ API Base URL is not set.");
+        console.error("❌ API Base URL is not loaded yet.");
         return;
     }
 
     fetch(`${API_BASE}/config`)
         .then(response => {
             if (!response.ok) {
-                throw new Error("❌ Failed to load server config.");
+                throw new Error("❌ Network response was not ok");
             }
             return response.json();
         })
@@ -49,10 +52,10 @@ function loadServerConfig() {
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
-        .catch(error => console.error('❌ Error loading server config:', error));
+        .catch(error => console.error('❌ Error loading config:', error));
 }
 
-// ✅ מילוי השדות בטופס
+// ✅ מילוי שדות בחירה בטופס
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
@@ -72,12 +75,12 @@ function populateSelect(selectId, options) {
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
+    const formData = new FormData(this);
+
     if (!API_BASE) {
-        console.error("❌ API Base URL is not set.");
+        console.error("❌ API Base URL is not loaded yet.");
         return;
     }
-
-    const formData = new FormData(this);
 
     fetch(`${API_BASE}/submitBugReport`, {
         method: "POST",
@@ -97,13 +100,13 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
             console.error("❌ Error saving report:", data.error);
         }
     })
-    .catch(error => console.error('❌ Error submitting report:', error));
+    .catch(error => console.error('❌ Error:', error));
 });
 
-// ✅ כפתור להורדת Excel
+// ✅ כפתור להורדת Excel מהשרת
 document.getElementById("downloadExcel").addEventListener("click", function() {
     if (!API_BASE) {
-        console.error("❌ API Base URL is not set.");
+        console.error("❌ API Base URL is not loaded yet.");
         return;
     }
     window.location.href = `${API_BASE}/downloadExcel`;
