@@ -1,27 +1,43 @@
-document.addEventListener("DOMContentLoaded", function() {
-    loadConfigData();
+let API_BASE = "";
+
+document.addEventListener("DOMContentLoaded", function() { 
+    loadApiConfig();
 });
 
-// ✅ כתובת השרת
-const API_BASE = "https://defectreport.onrender.com"; 
+// טעינת כתובת ה-API מקובץ config.json
+function loadApiConfig() {
+    fetch("config.json")
+        .then(response => response.json())
+        .then(config => { 
+            API_BASE = config.apiBaseUrl;
+            console.log("API Base URL Selected:", API_BASE);
+            loadConfigData();
+        })
+        .catch(error => console.error("Error loading API config:", error));
+}
 
-// ✅ טעינת הנתונים מהשרת
+// טעינת הנתונים מהשרת
 function loadConfigData() {
-    fetch(`${API_BASE}/config`)  
+    if (!API_BASE) {
+        console.error("API Base URL is not loaded yet.");
+        return;
+    }
+
+    fetch(`${API_BASE}/config`)
         .then(response => response.json())
         .then(data => {
-            console.log("✅ Config Loaded:", data);
+            console.log("Config Loaded:", data);
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
-        .catch(error => console.error('❌ Error loading config:', error));
+        .catch(error => console.error("Error loading config:", error));
 }
 
-// ✅ מילוי שדות בחירה
+// מילוי השדות בטופס
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
-        console.error(`❌ Element #${selectId} not found`);
+        console.error(`Element #${selectId} not found`);
         return;
     }
     selectElement.innerHTML = "";
@@ -33,13 +49,13 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ✅ מניעת שליחה כפולה
+// מניעת שליחה כפולה
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
     const submitButton = document.querySelector("#bugReportForm button");
-    if (submitButton.disabled) return;  // אם הכפתור מושבת, לא מבצעים שליחה נוספת
-    submitButton.disabled = true; // מניעת לחיצות נוספות
+    if (submitButton.disabled) return;  
+    submitButton.disabled = true; 
 
     const formData = new FormData(this);
 
@@ -56,18 +72,18 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
     .then(data => {
         if (data.success) {
             document.getElementById("confirmationMessage").style.display = "block";
-            console.log("✅ Report saved successfully!");
+            console.log("Report saved successfully!");
         } else {
-            console.error("❌ Error saving report:", data.error);
+            console.error("Error saving report:", data.error);
         }
     })
-    .catch(error => console.error('❌ Error:', error))
+    .catch(error => console.error("Error:", error))
     .finally(() => {
-        setTimeout(() => submitButton.disabled = false, 3000); // החזרת הכפתור לפעולה לאחר 3 שניות
+        setTimeout(() => submitButton.disabled = false, 3000);
     });
 });
 
-// ✅ כפתור להורדת Excel
+// כפתור להורדת Excel
 document.getElementById("downloadExcel").addEventListener("click", function() {
     window.location.href = `${API_BASE}/downloadExcel`;
 });
