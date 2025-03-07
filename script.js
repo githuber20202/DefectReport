@@ -1,45 +1,23 @@
 document.addEventListener("DOMContentLoaded", function() {
-    loadApiConfig();
+    loadConfigData();
 });
 
-let API_BASE = "";
+// ✅ שימוש ב-GitHub Pages + Render
+const API_BASE = "https://defectreport.onrender.com"; 
 
-function loadApiConfig() {
-    fetch("config.json")
-        .then(response => response.json())
-        .then(config => {
-            console.log("✅ Config Loaded:", config);
-
-            if (window.location.hostname.includes("github.io")) {
-                API_BASE = config.environments.githubPages;
-            } else if (window.location.hostname.includes("localhost")) {
-                API_BASE = config.environments.local;
-            } else {
-                API_BASE = config.environments.production;
-            }
-
-            console.log("✅ API Base URL Selected:", API_BASE);
-            loadConfigData();
-        })
-        .catch(error => console.error("❌ Error loading API config:", error));
-}
-
+// ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
-    if (!API_BASE) {
-        console.error("❌ API Base URL is not loaded yet.");
-        return;
-    }
-
-    fetch(`${API_BASE}/config`)
+    fetch(`${API_BASE}/config`) 
         .then(response => response.json())
         .then(data => {
-            console.log("✅ Config Data Loaded:", data);
+            console.log("✅ Config Loaded:", data);
             populateSelect("bugType", data.issueTypes);
             populateSelect("module", data.modules);
         })
         .catch(error => console.error('❌ Error loading config:', error));
 }
 
+// ✅ מילוי השדות בטופס
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
@@ -55,15 +33,15 @@ function populateSelect(selectId, options) {
     });
 }
 
+// ✅ מניעת שליחה כפולה של דיווחים
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const formData = new FormData(this);
+    const submitButton = document.querySelector("#bugReportForm button");
+    submitButton.disabled = true;
+    setTimeout(() => submitButton.disabled = false, 3000);
 
-    if (!API_BASE) {
-        console.error("❌ API Base URL is not loaded yet.");
-        return;
-    }
+    const formData = new FormData(this);
 
     fetch(`${API_BASE}/submitBugReport`, {
         method: "POST",
@@ -86,10 +64,7 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
     .catch(error => console.error('❌ Error:', error));
 });
 
+// ✅ הורדת Excel מהשרת
 document.getElementById("downloadExcel").addEventListener("click", function() {
-    if (!API_BASE) {
-        console.error("❌ API Base URL is not loaded yet.");
-        return;
-    }
     window.location.href = `${API_BASE}/downloadExcel`;
 });
