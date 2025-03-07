@@ -7,8 +7,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const dynamicField = document.getElementById("dynamicField");
     const confirmationMessage = document.getElementById("confirmationMessage");
     const downloadExcelButton = document.getElementById("downloadExcel");
+    const fileUploadField = document.getElementById("fileUpload");
     
     let API_BASE = "http://localhost:3000";
+
+    // 🔒 הסתרת שדה העלאת קובץ בצורה מוחלטת
+    if (fileUploadField) {
+        console.log("הסתרת העלאת קובץ");
+        fileUploadField.style.display = "none";
+    }
 
     // 🔒 הגבלת בחירת שדות לפי סדר
     systemSelect.disabled = true;

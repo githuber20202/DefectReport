@@ -10,10 +10,30 @@ body {
   height: 100vh;
 }
 
-/* ✅ כותרת */
+/* ✅ כותרת עם זכוכית מגדלת */
 h1 {
   text-align: center;
   color: #333;
+  position: relative;
+  display: inline-block;
+  font-size: 2em;
+  transition: transform 0.3s ease-in-out;
+  padding-right: 40px; /* מקום לאייקון */
+}
+
+/* ✅ הוספת תמונת זכוכית מגדלת */
+h1::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  top: 30%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 70px;
+  background-image: url('magnifying-glass.png'); /* לוודא שהתמונה זמינה */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* ✅ טופס דיווח תקלות */
@@ -26,7 +46,6 @@ form {
   max-width: 100%;
   text-align: right;
   direction: rtl;
-  display: block !important; /* ✅ ודא שהתוכן לא מוסתר */
 }
 
 /* ✅ עיצוב תוויות */
@@ -79,4 +98,9 @@ button:hover {
       width: 90%;
       padding: 20px;
   }
+}
+
+/* ✅ הסתרת שדה העלאת קובץ כולל wrapper אפשרי */
+#fileUpload, #fileUploadWrapper {
+  display: none !important;
 }
