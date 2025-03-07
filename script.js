@@ -9,7 +9,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const downloadExcelButton = document.getElementById("downloadExcel");
     const fileUploadField = document.getElementById("fileUpload");
     
-    let API_BASE = "http://localhost:3000";
+    let API_BASE = "";
+
+    // 🚀 טוען את כתובת ה-API מה-config.json
+    fetch("/config")
+        .then(response => response.json())
+        .then(config => {
+            API_BASE = config.environments.production || "http://localhost:3000";
+            console.log("✅ API Base URL:", API_BASE);
+        })
+        .catch(error => console.error("❌ Error loading config:", error));
 
     // 🔒 הסתרת שדה העלאת קובץ בצורה מוחלטת
     if (fileUploadField) {
