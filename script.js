@@ -1,56 +1,73 @@
 document.addEventListener("DOMContentLoaded", function() {
-  loadConfigData();
+    loadConfigData();
 });
 
-// טעינת הנתונים מ-config.json
+// ✅ כתובת השרת
+const API_BASE = "https://defectreport.onrender.com"; 
+
+// ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
-  fetch("http://localhost:3000/config")
-      .then(response => response.json())
-      .then(data => {
-          populateSelect("bugType", data.issueTypes);
-          populateSelect("module", data.modules);
-      })
-      .catch(error => console.error('Error loading config:', error));
+    fetch(`${API_BASE}/config`)  
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Config Loaded:", data);
+            populateSelect("bugType", data.issueTypes);
+            populateSelect("module", data.modules);
+        })
+        .catch(error => console.error('❌ Error loading config:', error));
 }
 
+// ✅ מילוי שדות בחירה
 function populateSelect(selectId, options) {
-  const selectElement = document.getElementById(selectId);
-  selectElement.innerHTML = ""; // ניקוי התוכן הקודם
-  options.forEach(option => {
-      const optionElement = document.createElement("option");
-      optionElement.value = option;
-      optionElement.textContent = option;
-      selectElement.appendChild(optionElement);
-  });
+    const selectElement = document.getElementById(selectId);
+    if (!selectElement) {
+        console.error(`❌ Element #${selectId} not found`);
+        return;
+    }
+    selectElement.innerHTML = "";
+    options.forEach(option => {
+        const optionElement = document.createElement("option");
+        optionElement.value = option;
+        optionElement.textContent = option;
+        selectElement.appendChild(optionElement);
+    });
 }
 
-// שליחת הדיווח לשרת
+// ✅ מניעת שליחה כפולה
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const formData = new FormData(this);
+    const submitButton = document.querySelector("#bugReportForm button");
+    if (submitButton.disabled) return;  // אם הכפתור מושבת, לא מבצעים שליחה נוספת
+    submitButton.disabled = true; // מניעת לחיצות נוספות
 
-  fetch("http://localhost:3000/submitBugReport", {
-      method: "POST",
-      body: JSON.stringify({
-          bugType: formData.get("bugType"),
-          module: formData.get("module"),
-          description: formData.get("description")
-      }),
-      headers: { "Content-Type": "application/json" }
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.success) {
-          document.getElementById("confirmationMessage").style.display = "block";
-      } else {
-          console.error("Error saving report:", data.error);
-      }
-  })
-  .catch(error => console.error('Error:', error));
+    const formData = new FormData(this);
+
+    fetch(`${API_BASE}/submitBugReport`, {
+        method: "POST",
+        body: JSON.stringify({
+            bugType: formData.get("bugType"),
+            module: formData.get("module"),
+            description: formData.get("description")
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("confirmationMessage").style.display = "block";
+            console.log("✅ Report saved successfully!");
+        } else {
+            console.error("❌ Error saving report:", data.error);
+        }
+    })
+    .catch(error => console.error('❌ Error:', error))
+    .finally(() => {
+        setTimeout(() => submitButton.disabled = false, 3000); // החזרת הכפתור לפעולה לאחר 3 שניות
+    });
 });
 
 // ✅ כפתור להורדת Excel
 document.getElementById("downloadExcel").addEventListener("click", function() {
-  window.location.href = "http://localhost:3000/downloadExcel";
+    window.location.href = `${API_BASE}/downloadExcel`;
 });

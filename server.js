@@ -1,23 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const cors = require('cors');
+const cors = require('cors'); 
 const XLSX = require('xlsx');
 
 const app = express();
 const port = 3000;
 
-// ✅ הפעלת CORS לכל הבקשות
+// ✅ הפעלת CORS
 app.use(cors());
 
-// Middleware
+// ✅ Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// דף הבית
+// ✅ דף הבית
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 // ✅ API להחזרת הקונפיגורציה
@@ -42,8 +42,21 @@ app.post('/submitBugReport', (req, res) => {
     }
 
     const bugReport = { bugType, module, description, timestamp: new Date().toISOString() };
+
     fs.readFile('bugReports.json', (err, data) => {
         let reports = !err && data.length ? JSON.parse(data) : [];
+
+        // ✅ בדיקה אם התקלה כבר קיימת
+        const exists = reports.some(report =>
+            report.bugType === bugReport.bugType &&
+            report.module === bugReport.module &&
+            report.description === bugReport.description
+        );
+
+        if (exists) {
+            return res.status(409).json({ error: "Duplicate report detected" }); // קוד 409 = Conflict
+        }
+
         reports.push(bugReport);
         fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), () => {
             res.json({ success: true });
@@ -64,4 +77,5 @@ app.get('/downloadExcel', (req, res) => {
     });
 });
 
+// ✅ הפעלת השרת
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
