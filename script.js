@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", function() {
     loadConfigData();
 });
 
-// ✅ שימוש ב-GitHub Pages + Render
+// ✅ כתובת השרת
 const API_BASE = "https://defectreport.onrender.com"; 
 
 // ✅ טעינת הנתונים מהשרת
 function loadConfigData() {
-    fetch(`${API_BASE}/config`) 
+    fetch(`${API_BASE}/config`)  
         .then(response => response.json())
         .then(data => {
             console.log("✅ Config Loaded:", data);
@@ -17,7 +17,7 @@ function loadConfigData() {
         .catch(error => console.error('❌ Error loading config:', error));
 }
 
-// ✅ מילוי השדות בטופס
+// ✅ מילוי שדות בחירה
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
@@ -33,13 +33,13 @@ function populateSelect(selectId, options) {
     });
 }
 
-// ✅ מניעת שליחה כפולה של דיווחים
+// ✅ מניעת שליחה כפולה
 document.getElementById("bugReportForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
     const submitButton = document.querySelector("#bugReportForm button");
-    submitButton.disabled = true;
-    setTimeout(() => submitButton.disabled = false, 3000);
+    if (submitButton.disabled) return;  // אם הכפתור מושבת, לא מבצעים שליחה נוספת
+    submitButton.disabled = true; // מניעת לחיצות נוספות
 
     const formData = new FormData(this);
 
@@ -61,10 +61,13 @@ document.getElementById("bugReportForm").addEventListener("submit", function(eve
             console.error("❌ Error saving report:", data.error);
         }
     })
-    .catch(error => console.error('❌ Error:', error));
+    .catch(error => console.error('❌ Error:', error))
+    .finally(() => {
+        setTimeout(() => submitButton.disabled = false, 3000); // החזרת הכפתור לפעולה לאחר 3 שניות
+    });
 });
 
-// ✅ הורדת Excel מהשרת
+// ✅ כפתור להורדת Excel
 document.getElementById("downloadExcel").addEventListener("click", function() {
     window.location.href = `${API_BASE}/downloadExcel`;
 });
