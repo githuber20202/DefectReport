@@ -5,35 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דיווח תקלות</title>
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- ✅ Fix for missing favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
     <form id="bugReportForm">
-        <div>
-            <h1>דיווח תקלות</h1>
-        </div>
+        <h1>דיווח תקלות</h1>
+        
+        <label for="reporterName">שם מדווח:</label>
+        <input type="text" id="reporterName" name="reporterName" required>
 
-        <label for="bugType">סוג תקלה:</label>
-        <select id="bugType" name="bugType"></select><br><br>
+        <label for="systemName">שם המערכת:</label>
+        <select id="systemName" name="systemName" required>
+            <option value="">בחר מערכת...</option>
+            <option value="מערכת 1">מערכת 1</option>
+            <option value="מערכת 2">מערכת 2</option>
+            <option value="מערכת 3">מערכת 3</option>
+            <option value="מערכת 4">מערכת 4</option>
+            <option value="מערכת 5">מערכת 5</option>
+            <option value="מערכת 6">מערכת 6</option>
+            <option value="מערכת 7">מערכת 7</option>
+            <option value="מערכת 8">מערכת 8</option>
+            <option value="מערכת 9">מערכת 9</option>
+            <option value="מערכת 10">מערכת 10</option>
+        </select>
+        
+        <label for="reason">סיבת הפנייה:</label>
+        <select id="reason" name="reason" required>
+            <option value="">בחר סיבה...</option>
+            <option value="תקלה">תקלה</option>
+            <option value="בקשת הרשאות">בקשת הרשאות</option>
+            <option value="הצעת ייעול">הצעת ייעול</option>
+        </select>
 
+        <div id="dynamicField"></div>
+        
         <label for="module">מודול מערכת:</label>
-        <select id="module" name="module"></select><br><br>
-
-        <label for="description">תיאור התקלה:</label>
-        <textarea id="description" name="description"></textarea><br><br>
-
-        <!-- ✅ כפתור שליחת דיווח -->
+        <select id="module" name="module" required>
+            <option value="">בחר מודול...</option>
+        </select>
+        
+        <label for="attachment">העלאת קובץ:</label>
+        <input type="file" id="attachment" name="attachment">
+        
         <button type="submit">שלח דיווח</button>
-
-        <!-- ✅ הודעת הצלחה אחרי השליחה -->
-        <p id="confirmationMessage" style="display: none; color: green; margin-top: 10px;">✅ הדיווח נשמר בהצלחה!</p>
-
-        <!-- ✅ כפתור הורדת קובץ תקלות לאחר שליחת דיווח -->
-        <button id="downloadExcel">📥 הורדת קובץ תקלות</button>
+        <button type="button" id="downloadExcel">📥 הורדת קובץ תקלות</button>
+        
+        <p id="confirmationMessage" style="display: none; color: green;">✅ הדיווח נשמר בהצלחה!</p>
     </form>
-
+    
     <script src="script.js"></script>
 </body>
 </html>

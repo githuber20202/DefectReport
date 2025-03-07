@@ -1,98 +1,26 @@
 [
   {
-    "bugType": "שגיאה קריטית",
-    "module": "מודול התחברות",
-    "description": "תקלה בהתחברות למערכת",
-    "timestamp": "2024-03-06T12:00:00Z"
+    "reporterName": "123",
+    "systemName": "מערכת 1",
+    "reason": "תקלה",
+    "module": "התראות",
+    "description": "5685689חיעגכעעיעיע",
+    "timestamp": "2025-03-07T15:57:49.065Z"
   },
   {
-    "bugType": "תקלה קריטית",
-    "module": "דוגמה א",
-    "description": "fghd",
-    "timestamp": "2025-03-06T17:32:40.610Z"
+    "reporterName": "2",
+    "systemName": "מערכת 10",
+    "reason": "בקשת הרשאות",
+    "module": "התראות 10",
+    "description": "ענחעלגמנלחגכעלדגכחעידחכע",
+    "timestamp": "2025-03-07T15:58:41.648Z"
   },
   {
-    "bugType": "תקלה קריטית",
-    "module": "דוגמה א",
-    "description": "fghd",
-    "timestamp": "2025-03-06T17:32:47.481Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה א",
-    "description": "כגע",
-    "timestamp": "2025-03-06T17:39:10.026Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה א",
-    "description": "כגע",
-    "timestamp": "2025-03-06T17:39:12.765Z"
-  },
-  {
-    "bugType": "תקלה קריטית",
-    "module": "דוגמה א",
-    "description": "123",
-    "timestamp": "2025-03-06T17:47:38.408Z"
-  },
-  {
-    "bugType": "תקלה קריטית",
-    "module": "דוגמה א",
-    "description": "123",
-    "timestamp": "2025-03-06T17:47:44.650Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ב",
-    "description": "abcdefghklmnop",
-    "timestamp": "2025-03-06T17:48:26.347Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ג",
-    "description": "sdfsdfgsdf",
-    "timestamp": "2025-03-06T17:48:32.950Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ד",
-    "description": "gdsgfsdfsdfg",
-    "timestamp": "2025-03-06T17:48:36.156Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ה",
-    "description": "gsdsgfsg",
-    "timestamp": "2025-03-06T17:48:41.312Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ה",
-    "description": "gsdsgfsg",
-    "timestamp": "2025-03-06T17:48:43.123Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ב",
-    "description": "fgj,gkdfkl;ggsdfsdfsdfg",
-    "timestamp": "2025-03-06T18:29:08.241Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ג",
-    "description": "fgj,gshdfnhfghfghfgh;ggsdfsdfsdfg",
-    "timestamp": "2025-03-06T18:29:14.335Z"
-  },
-  {
-    "bugType": "בעיה בהתחברות",
-    "module": "דוגמה ג",
-    "description": "fgj,gshdfnhfghfghfgh;ggsdfsdfsdfg",
-    "timestamp": "2025-03-06T18:29:21.400Z"
-  },
-  {
-    "bugType": "תקלה קריטית",
-    "module": "דוגמה א",
-    "description": "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ",
-    "timestamp": "2025-03-07T12:41:56.485Z"
+    "reporterName": "345",
+    "systemName": "מערכת 4",
+    "reason": "הצעת ייעול",
+    "module": "התראות 4",
+    "description": "בגלל שיש תלויות של שדה אחד בשני אז חשבתי על הגבלה לבחירת שדות כל עוד לא בוצע בחירה בשדה הקודם,\nלדוגמה :\nקודם ממלאים שם ורק אחרכך אשפר לבחור שדה שם מערכת וכך הלאה עד לשליחה של הדיווח",
+    "timestamp": "2025-03-07T15:59:07.335Z"
   }
 ]

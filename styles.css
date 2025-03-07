@@ -1,4 +1,4 @@
-/* עיצוב כללי לדף */
+/* ✅ עיצוב כללי */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
@@ -10,50 +10,49 @@ body {
   height: 100vh;
 }
 
-/* כותרת הדף */
+/* ✅ כותרת */
 h1 {
   text-align: center;
   color: #333;
 }
 
-/* טופס דיווח התקלה */
+/* ✅ טופס דיווח תקלות */
 form {
   background-color: #fff;
-  padding: 40px;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
   max-width: 100%;
-  text-align: center;
+  text-align: right;
+  direction: rtl;
+  display: block !important; /* ✅ ודא שהתוכן לא מוסתר */
 }
 
-/* כל תווית (label) */
+/* ✅ עיצוב תוויות */
 label {
   font-weight: bold;
-  color: #333;
   display: block;
-  margin: 10px 0 5px;
-  direction: rtl;
-  text-align: right;
+  margin-top: 10px;
+  color: #333;
 }
 
-/* שדות הבחירה (select) ושדות טקסט (textarea) */
-select, textarea {
+/* ✅ שדות קלט */
+input, select, textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-bottom: 15px;
+  margin-top: 5px;
   font-size: 16px;
   box-sizing: border-box;
-  direction: rtl;
 }
 
-/* כפתורים */
+/* ✅ כפתורים */
 button {
-  background-color: #4CAF50;
+  background-color: #007bff;
   color: white;
-  padding: 10px 15px;
+  padding: 10px;
   border: none;
   border-radius: 4px;
   font-size: 16px;
@@ -63,17 +62,21 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #0056b3;
 }
 
-/* ✅ סידור הודעת ההצלחה */
+/* ✅ הודעת אישור */
 #confirmationMessage {
   text-align: center;
-  display: block;
+  color: green;
   margin-top: 10px;
+  display: none;
 }
 
-/* ✅ מרווח לכפתור הורדת Excel */
-#downloadExcel {
-  margin-top: 15px;
+/* ✅ התאמות מובייל */
+@media (max-width: 500px) {
+  form {
+      width: 90%;
+      padding: 20px;
+  }
 }

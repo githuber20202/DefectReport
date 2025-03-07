@@ -1,94 +1,115 @@
-let API_BASE = "";
-
 document.addEventListener("DOMContentLoaded", function() {
-    loadApiConfig().then(() => {
-        console.log("✅ API Base URL Loaded:", API_BASE);
-        loadConfigData();
-    }).catch(error => console.error("❌ Error loading API config:", error));
-});
+    const form = document.getElementById("bugReportForm");
+    const nameInput = document.getElementById("reporterName");
+    const systemSelect = document.getElementById("systemName");
+    const reasonSelect = document.getElementById("reason");
+    const moduleSelect = document.getElementById("module");
+    const dynamicField = document.getElementById("dynamicField");
+    const confirmationMessage = document.getElementById("confirmationMessage");
+    const downloadExcelButton = document.getElementById("downloadExcel");
+    
+    let API_BASE = "http://localhost:3000";
 
-// ✅ Load API Configuration from config.json
-function loadApiConfig() {
-    return fetch("config.json")
-        .then(response => response.json())
-        .then(config => {
-            const env = window.location.hostname.includes("github.io") ? "githubPages"
-                      : window.location.hostname.includes("localhost") ? "local"
-                      : "production";
+    // 🔒 הגבלת בחירת שדות לפי סדר
+    systemSelect.disabled = true;
+    reasonSelect.disabled = true;
+    moduleSelect.disabled = true;
 
-            API_BASE = config.environments[env] || "";
-            if (!API_BASE) throw new Error("API Base URL is undefined.");
-        });
-}
+    nameInput.addEventListener("input", function() {
+        systemSelect.disabled = nameInput.value.trim() === "";
+    });
 
-// ✅ Load dynamic config data (issue types, modules, etc.)
-function loadConfigData() {
-    if (!API_BASE) {
-        console.error("❌ API Base URL is not loaded yet.");
-        return;
-    }
+    systemSelect.addEventListener("change", function() {
+        reasonSelect.disabled = systemSelect.value === "";
+    });
 
-    fetch(`${API_BASE}/config`)
+    reasonSelect.addEventListener("change", function() {
+        moduleSelect.disabled = reasonSelect.value === "";
+    });
+
+    // ✅ עדכון מודולים בהתאם לבחירת מערכת
+    const systemModules = {
+        "מערכת 1": ["מפה", "התראות", "מסננים"],
+        "מערכת 2": ["מפה 2", "התראות 2", "מסננים 2"],
+        "מערכת 3": ["מפה 3", "התראות 3", "מסננים 3"],
+        "מערכת 4": ["מפה 4", "התראות 4", "מסננים 4"],
+        "מערכת 5": ["מפה 5", "התראות 5", "מסננים 5"],
+        "מערכת 6": ["מפה 6", "התראות 6", "מסננים 6"],
+        "מערכת 7": ["מפה 7", "התראות 7", "מסננים 7"],
+        "מערכת 8": ["מפה 8", "התראות 8", "מסננים 8"],
+        "מערכת 9": ["מפה 9", "התראות 9", "מסננים 9"],
+        "מערכת 10": ["מפה 10", "התראות 10", "מסננים 10"]
+    };
+
+    systemSelect.addEventListener("change", function() {
+        const selectedSystem = systemSelect.value;
+        moduleSelect.innerHTML = "<option value=''>בחר מודול...</option>";
+        if (selectedSystem && systemModules[selectedSystem]) {
+            systemModules[selectedSystem].forEach(module => {
+                const option = document.createElement("option");
+                option.value = module;
+                option.textContent = module;
+                moduleSelect.appendChild(option);
+            });
+        }
+    });
+
+    // ✅ עדכון שדות דינמיים בהתאם לסיבת הפנייה
+    reasonSelect.addEventListener("change", function() {
+        console.log("סיבת הפנייה שנבחרה:", reasonSelect.value);
+        dynamicField.innerHTML = "";
+
+        if (reasonSelect.value !== "") {
+            const label = document.createElement("label");
+            label.setAttribute("for", "description");
+            const textarea = document.createElement("textarea");
+            textarea.id = "description";
+            textarea.name = "description";
+            textarea.required = true;
+            
+            switch (reasonSelect.value) {
+                case "תקלה":
+                    label.textContent = "תיאור שחזור התקלה:";
+                    break;
+                case "בקשת הרשאות":
+                    label.textContent = "הכנס בקשה מפורטת לקבלת הרשאה:";
+                    break;
+                case "הצעת ייעול":
+                    label.textContent = "הכנס את הצעת הייעול בצורה מפורטת:";
+                    break;
+            }
+            dynamicField.appendChild(label);
+            dynamicField.appendChild(textarea);
+        }
+    });
+
+    // ✅ שליחת הדיווח
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(form);
+        fetch(`${API_BASE}/submitBugReport`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
         .then(response => response.json())
         .then(data => {
-            console.log("✅ Config Loaded:", data);
-            populateSelect("bugType", data.issueTypes);
-            populateSelect("module", data.modules);
+            if (data.success) {
+                confirmationMessage.style.display = "block";
+                setTimeout(() => confirmationMessage.style.display = "none", 3000);
+                form.reset();
+                dynamicField.innerHTML = ""; // ✅ מחיקת שדה ההזנה הדינמי לאחר השליחה
+                systemSelect.disabled = true;
+                reasonSelect.disabled = true;
+                moduleSelect.disabled = true;
+            }
         })
-        .catch(error => console.error("❌ Error loading config:", error));
-}
-
-// ✅ Populate dropdowns
-function populateSelect(selectId, options) {
-    const selectElement = document.getElementById(selectId);
-    if (!selectElement) {
-        console.error(`❌ Element #${selectId} not found`);
-        return;
-    }
-    selectElement.innerHTML = "";
-    options.forEach(option => {
-        const optionElement = document.createElement("option");
-        optionElement.value = option;
-        optionElement.textContent = option;
-        selectElement.appendChild(optionElement);
+        .catch(error => console.error("❌ Error submitting report:", error));
     });
-}
 
-// ✅ Submit bug report
-document.getElementById("bugReportForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    const submitButton = document.querySelector("#bugReportForm button");
-    if (submitButton.disabled) return;
-    submitButton.disabled = true;
-
-    const formData = new FormData(this);
-
-    fetch(`${API_BASE}/submitBugReport`, {
-        method: "POST",
-        body: JSON.stringify({
-            bugType: formData.get("bugType"),
-            module: formData.get("module"),
-            description: formData.get("description")
-        }),
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById("confirmationMessage").style.display = "block";
-            console.log("✅ Report saved successfully!");
-        } else {
-            console.error("❌ Error saving report:", data.error);
-        }
-    })
-    .catch(error => console.error('❌ Error:', error))
-    .finally(() => {
-        setTimeout(() => submitButton.disabled = false, 3000);
+    // ✅ הורדת Excel
+    downloadExcelButton.addEventListener("click", function() {
+        window.location.href = `${API_BASE}/downloadExcel`;
     });
-});
-
-// ✅ Download Excel
-document.getElementById("downloadExcel").addEventListener("click", function() {
-    window.location.href = `${API_BASE}/downloadExcel`;
 });

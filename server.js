@@ -1,75 +1,51 @@
+// ✅ server.js - שרת Node.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const XLSX = require('xlsx');
-const path = require('path');  // ✅ Import path module
 
 const app = express();
 const port = 3000;
 
-// ✅ Enable CORS
+// ✅ הגדרות CORS
 app.use(cors());
-
-// ✅ Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname)));
 
-// ✅ Serve static files correctly
-app.use(express.static(path.join(__dirname)));  // Serve index.html, styles.css, script.js, etc.
+// ✅ קובץ קונפיגורציה
+const configPath = path.join(__dirname, 'config.json');
 
-// ✅ Home Route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));  // Serve the HTML file
-});
-
-// ✅ Config API
+// ✅ API לקבלת קונפיגורציה
 app.get('/config', (req, res) => {
-    fs.readFile('config.json', (err, data) => {
-        if (err) return res.status(500).json({ error: "Error reading config file" });
-
-        try {
-            const config = JSON.parse(data);
-            res.json(config);
-        } catch (parseError) {
-            res.status(500).json({ error: "Error parsing config JSON" });
-        }
+    fs.readFile(configPath, (err, data) => {
+        if (err) return res.status(500).json({ error: "Error loading config" });
+        res.json(JSON.parse(data));
     });
 });
 
-// ✅ API for Bug Reports
+// ✅ API לשמירת דיווחי תקלות
+const reportsFile = path.join(__dirname, 'bugReports.json');
 app.post('/submitBugReport', (req, res) => {
-    const { bugType, module, description } = req.body;
-    if (!bugType || !module || !description) {
+    const { reporterName, systemName, reason, module, description, isBlocking } = req.body;
+    if (!reporterName || !systemName || !reason || !module || !description) {
         return res.status(400).json({ error: "All fields are required" });
     }
-
-    const bugReport = { bugType, module, description, timestamp: new Date().toISOString() };
-
-    fs.readFile('bugReports.json', (err, data) => {
+    
+    const report = { reporterName, systemName, reason, module, description, isBlocking, timestamp: new Date().toISOString() };
+    fs.readFile(reportsFile, (err, data) => {
         let reports = !err && data.length ? JSON.parse(data) : [];
-
-        // ✅ Check for duplicates
-        const exists = reports.some(report =>
-            report.bugType === bugReport.bugType &&
-            report.module === bugReport.module &&
-            report.description === bugReport.description
-        );
-
-        if (exists) {
-            return res.status(409).json({ error: "Duplicate report detected" });
-        }
-
-        reports.push(bugReport);
-        fs.writeFile('bugReports.json', JSON.stringify(reports, null, 2), () => {
+        reports.push(report);
+        fs.writeFile(reportsFile, JSON.stringify(reports, null, 2), () => {
             res.json({ success: true });
         });
     });
 });
 
-// ✅ API for Downloading Excel
+// ✅ API להורדת Excel
 app.get('/downloadExcel', (req, res) => {
-    fs.readFile('bugReports.json', (err, data) => {
+    fs.readFile(reportsFile, (err, data) => {
         const reports = !err && data.length ? JSON.parse(data) : [];
         const ws = XLSX.utils.json_to_sheet(reports);
         const wb = XLSX.utils.book_new();
@@ -80,5 +56,5 @@ app.get('/downloadExcel', (req, res) => {
     });
 });
 
-// ✅ Start Server
+// ✅ הפעלת השרת
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
