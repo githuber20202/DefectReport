@@ -9,14 +9,18 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // ✅ הגדרות CORS
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type"
+}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
-// ✅ קובץ קונפיגורציה
 const configPath = path.join(__dirname, 'config.json');
+const reportsFile = path.join(__dirname, 'bugReports.json');
 
-// ✅ API לקבלת קונפיגורציה
+// ✅ API לקבלת קובץ הקונפיגורציה
 app.get('/config', (req, res) => {
     fs.readFile(configPath, (err, data) => {
         if (err) return res.status(500).json({ error: "Error loading config" });
@@ -24,50 +28,40 @@ app.get('/config', (req, res) => {
     });
 });
 
-// ✅ API לשמירת דיווחי תקלות - שמירת UTC בלבד
-const reportsFile = path.join(__dirname, 'bugReports.json');
+// ✅ API לשמירת דיווחי תקלות (עד 100 רשומות אחרונות)
 app.post('/submitBugReport', (req, res) => {
-    const { reporterName, systemName, reason, module, description, isBlocking } = req.body;
-    if (!reporterName || !systemName || !reason || !module || !description) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
-
-    // ✔ שמירת השעה ב-UTC בלבד
-    const timestamp = new Date().toISOString();
-    const report = { reporterName, systemName, reason, module, description, isBlocking, timestamp };
-
-    console.log("📥 New Report Received:", report);
+    const report = { ...req.body, timestamp: new Date().toISOString() };
 
     fs.readFile(reportsFile, (err, data) => {
         let reports = !err && data.length ? JSON.parse(data) : [];
         reports.push(report);
+        if (reports.length > 100) {
+            reports = reports.slice(-100);
+        }
+
         fs.writeFile(reportsFile, JSON.stringify(reports, null, 2), (err) => {
-            if (err) {
-                console.error("❌ Error writing to bugReports.json:", err);
-                return res.status(500).json({ error: "Failed to save report" });
-            }
-            console.log("✅ bugReports.json updated successfully!");
-            res.json({ success: true });
+    if (err) {
+        console.error("שגיאה בכתיבת הקובץ:", err);
+        return res.status(500).json({ error: "Failed to save report" });
+    }
+    res.json({ success: true });
         });
     });
 });
 
-// ✅ API להורדת Excel עם המרת שעה לזמן ישראל (UTC+2 או UTC+3)
+// ✅ API להורדת Excel עם זמן מתוקן לישראל
 app.get('/downloadExcel', (req, res) => {
     fs.readFile(reportsFile, (err, data) => {
-        const reports = !err && data.length ? JSON.parse(data) : [];
+        let reports = !err && data.length ? JSON.parse(data) : [];
 
-        // המרת UTC לזמן ישראל (בודק האם בקיץ או חורף)
         const adjustedReports = reports.map(report => {
             const utcDate = new Date(report.timestamp);
-            
-            // בדיקת הפרש הזמן בין UTC לישראל (זמן קיץ או חורף)
-            const offset = (new Date().getTimezoneOffset() === -180) ? 3 : 2; // UTC+3 בקיץ, UTC+2 בחורף
-            utcDate.setHours(utcDate.getHours() + offset);
-            
+            const offset = new Date().getTimezoneOffset() === -180 ? 3 : 2;
+            const localDate = new Date(utcDate.getTime() + (offset * 60 * 60 * 1000));
+
             return {
                 ...report,
-                timestamp: utcDate.toISOString().replace("T", " ").substring(0, 19) // הצגת התאריך בלי Z
+                timestamp: localDate.toISOString().replace("T", " ").substring(0, 19)
             };
         });
 
