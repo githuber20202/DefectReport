@@ -1,24 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const cors = require('cors'); 
+const cors = require('cors');
 const XLSX = require('xlsx');
+const path = require('path');  // ✅ Import path module
 
 const app = express();
 const port = 3000;
 
 // ✅ Enable CORS
 app.use(cors());
+
+// ✅ Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
-// ✅ Home Page
+// ✅ Serve static files correctly
+app.use(express.static(path.join(__dirname)));  // Serve index.html, styles.css, script.js, etc.
+
+// ✅ Home Route
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname, 'index.html'));  // Serve the HTML file
 });
 
-// ✅ API: Get Configuration
+// ✅ Config API
 app.get('/config', (req, res) => {
     fs.readFile('config.json', (err, data) => {
         if (err) return res.status(500).json({ error: "Error reading config file" });
@@ -32,7 +37,7 @@ app.get('/config', (req, res) => {
     });
 });
 
-// ✅ API: Submit Bug Report
+// ✅ API for Bug Reports
 app.post('/submitBugReport', (req, res) => {
     const { bugType, module, description } = req.body;
     if (!bugType || !module || !description) {
@@ -44,7 +49,7 @@ app.post('/submitBugReport', (req, res) => {
     fs.readFile('bugReports.json', (err, data) => {
         let reports = !err && data.length ? JSON.parse(data) : [];
 
-        // ✅ Check if the bug already exists
+        // ✅ Check for duplicates
         const exists = reports.some(report =>
             report.bugType === bugReport.bugType &&
             report.module === bugReport.module &&
@@ -52,7 +57,7 @@ app.post('/submitBugReport', (req, res) => {
         );
 
         if (exists) {
-            return res.status(409).json({ error: "Duplicate report detected" }); 
+            return res.status(409).json({ error: "Duplicate report detected" });
         }
 
         reports.push(bugReport);
@@ -62,7 +67,7 @@ app.post('/submitBugReport', (req, res) => {
     });
 });
 
-// ✅ API: Download Excel
+// ✅ API for Downloading Excel
 app.get('/downloadExcel', (req, res) => {
     fs.readFile('bugReports.json', (err, data) => {
         const reports = !err && data.length ? JSON.parse(data) : [];
@@ -75,5 +80,5 @@ app.get('/downloadExcel', (req, res) => {
     });
 });
 
-// ✅ Start the Server
+// ✅ Start Server
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
