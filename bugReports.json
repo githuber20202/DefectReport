@@ -62,5 +62,21 @@
     "module": "מסננים 3",
     "description": "123165456461231",
     "timestamp": "2025-03-07T16:31:16.039Z"
+  },
+  {
+    "reporterName": "דג",
+    "systemName": "מערכת 1",
+    "reason": "בקשת הרשאות",
+    "module": "מפה",
+    "description": "דג",
+    "timestamp": "2025-03-07T21:04:51.389Z"
+  },
+  {
+    "reporterName": "TEST",
+    "systemName": "מערכת 1",
+    "reason": "תקלה",
+    "module": "מפה",
+    "description": "1231",
+    "timestamp": "2025-03-07T21:06:03.639Z"
   }
 ]

@@ -1,4 +1,3 @@
-// ✅ server.js - שרת Node.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -33,15 +32,21 @@ app.post('/submitBugReport', (req, res) => {
         return res.status(400).json({ error: "All fields are required" });
     }
 
-    // ✔ שמירת השעה ב-UTC בלבד (ללא תיקון)
+    // ✔ שמירת השעה ב-UTC בלבד
     const timestamp = new Date().toISOString();
-
     const report = { reporterName, systemName, reason, module, description, isBlocking, timestamp };
-    
+
+    console.log("📥 New Report Received:", report);
+
     fs.readFile(reportsFile, (err, data) => {
         let reports = !err && data.length ? JSON.parse(data) : [];
         reports.push(report);
-        fs.writeFile(reportsFile, JSON.stringify(reports, null, 2), () => {
+        fs.writeFile(reportsFile, JSON.stringify(reports, null, 2), (err) => {
+            if (err) {
+                console.error("❌ Error writing to bugReports.json:", err);
+                return res.status(500).json({ error: "Failed to save report" });
+            }
+            console.log("✅ bugReports.json updated successfully!");
             res.json({ success: true });
         });
     });

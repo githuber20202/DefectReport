@@ -13,12 +13,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 🚀 טוען את כתובת ה-API מה-config.json
     fetch("/config")
-        .then(response => response.json())
-        .then(config => {
-            API_BASE = config.environments.production || "http://localhost:3000";
-            console.log("✅ API Base URL:", API_BASE);
-        })
-        .catch(error => console.error("❌ Error loading config:", error));
+    .then(response => response.json())
+    .then(config => {
+        const isLocal = window.location.hostname === "localhost";
+        API_BASE = isLocal ? config.environments.local : config.environments.production;
+        console.log("✅ API Base URL:", API_BASE);
+    })
+    .catch(error => console.error("❌ Error loading config:", error));
+
 
     // 🔒 הסתרת שדה העלאת קובץ בצורה מוחלטת
     if (fileUploadField) {

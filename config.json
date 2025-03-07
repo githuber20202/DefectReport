@@ -1,6 +1,5 @@
 {
   "environments": {
-    "githubPages": "https://defectreport.onrender.com",
     "local": "http://localhost:3000",
     "production": "https://defectreport.onrender.com"
   },
