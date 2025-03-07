@@ -25,7 +25,7 @@ app.get('/config', (req, res) => {
     });
 });
 
-// ✅ API לשמירת דיווחי תקלות עם תיקון שעה (UTC+2)
+// ✅ API לשמירת דיווחי תקלות - שמירת UTC בלבד
 const reportsFile = path.join(__dirname, 'bugReports.json');
 app.post('/submitBugReport', (req, res) => {
     const { reporterName, systemName, reason, module, description, isBlocking } = req.body;
@@ -33,9 +33,8 @@ app.post('/submitBugReport', (req, res) => {
         return res.status(400).json({ error: "All fields are required" });
     }
 
-    // הוספת שעתיים לזמן UTC כדי להתאים לזמן ישראל
-    const now = new Date();
-    const timestamp = new Date(now.getTime() + (2 * 60 * 60 * 1000)).toISOString();
+    // ✔ שמירת השעה ב-UTC בלבד (ללא תיקון)
+    const timestamp = new Date().toISOString();
 
     const report = { reporterName, systemName, reason, module, description, isBlocking, timestamp };
     
@@ -48,17 +47,24 @@ app.post('/submitBugReport', (req, res) => {
     });
 });
 
-// ✅ API להורדת Excel עם תיקון תאריך לזמן ישראל
+// ✅ API להורדת Excel עם המרת שעה לזמן ישראל (UTC+2 או UTC+3)
 app.get('/downloadExcel', (req, res) => {
     fs.readFile(reportsFile, (err, data) => {
         const reports = !err && data.length ? JSON.parse(data) : [];
 
-        // תיקון הזמנים ל-UTC+2
-        const adjustedReports = reports.map(report => ({
-            ...report,
-            timestamp: new Date(new Date(report.timestamp).getTime() + (2 * 60 * 60 * 1000))
-                .toISOString().replace("T", " ").substring(0, 19) // הצגת הפורמט הנכון
-        }));
+        // המרת UTC לזמן ישראל (בודק האם בקיץ או חורף)
+        const adjustedReports = reports.map(report => {
+            const utcDate = new Date(report.timestamp);
+            
+            // בדיקת הפרש הזמן בין UTC לישראל (זמן קיץ או חורף)
+            const offset = (new Date().getTimezoneOffset() === -180) ? 3 : 2; // UTC+3 בקיץ, UTC+2 בחורף
+            utcDate.setHours(utcDate.getHours() + offset);
+            
+            return {
+                ...report,
+                timestamp: utcDate.toISOString().replace("T", " ").substring(0, 19) // הצגת התאריך בלי Z
+            };
+        });
 
         const ws = XLSX.utils.json_to_sheet(adjustedReports);
         const wb = XLSX.utils.book_new();
