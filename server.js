@@ -7,6 +7,7 @@ const path = require('path');
 const XLSX = require('xlsx');
 
 const app = express();
+// const port = 3000;
 const port = process.env.PORT || 3000;
 
 // ✅ הגדרות CORS
@@ -57,4 +58,5 @@ app.get('/downloadExcel', (req, res) => {
 });
 
 // ✅ הפעלת השרת
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+// app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, '0.0.0.0', () => console.log(`Server running at port ${port}`));
