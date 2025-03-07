@@ -1,22 +1,22 @@
 {
-    "environments": {
-        "githubPages": "https://defectreport.onrender.com",
-        "local": "http://localhost:3000",
-        "production": "https://api.myproductionserver.com"
-    },
-    "issueTypes": [
-        "תקלה קריטית",
-        "בעיה בהתחברות",
-        "תקלה בתצוגה",
-        "חוסר אזהרה",
-        "ביצועים איטיים",
-        "שגיאת מערכת"
-    ],
-    "modules": [
-        "דוגמה א",
-        "דוגמה ב",
-        "דוגמה ג",
-        "דוגמה ד",
-        "דוגמה ה"
-    ]
+  "environments": {
+    "githubPages": "https://defectreport.onrender.com",
+    "local": "http://localhost:3000",
+    "production": "https://api.myproductionserver.com"
+  },
+  "issueTypes": [
+    "תקלה קריטית",
+    "בעיה בהתחברות",
+    "תקלה בביצועים",
+    "חוסר אמינות",
+    "באגים אסתטיים",
+    "שגיאת מערכת"
+  ],
+  "modules": [
+    "דוגמה א",
+    "דוגמה ב",
+    "דוגמה ג",
+    "דוגמה ד",
+    "דוגמה ה"
+  ]
 }
