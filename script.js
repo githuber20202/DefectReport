@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let API_BASE = "";
 
+    // ✅ טעינת כתובת ה-API
     async function loadConfig() {
         try {
             const response = await fetch("/config");
@@ -41,16 +42,49 @@ document.addEventListener("DOMContentLoaded", async function () {
         reasonSelect.disabled = true;
         moduleSelect.disabled = true;
 
+        // ✅ פונקציה להוספת tooltip לשדות נעולים
+        function addTooltip(element, message) {
+            element.setAttribute("title", message);
+            element.classList.add("tooltip");
+        }
+
+        function removeTooltip(element) {
+            element.removeAttribute("title");
+            element.classList.remove("tooltip");
+        }
+
+        addTooltip(systemSelect, "יש למלא שם מדווח תחילה.");
+        addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
+        addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
+
         nameInput.addEventListener("input", function () {
-            systemSelect.disabled = nameInput.value.trim() === "";
+            if (this.value.trim() !== "") {
+                systemSelect.disabled = false;
+                removeTooltip(systemSelect);
+            } else {
+                systemSelect.disabled = true;
+                addTooltip(systemSelect, "יש למלא שם מדווח תחילה.");
+            }
         });
 
         systemSelect.addEventListener("change", function () {
-            reasonSelect.disabled = systemSelect.value === "";
+            if (this.value !== "") {
+                reasonSelect.disabled = false;
+                removeTooltip(reasonSelect);
+            } else {
+                reasonSelect.disabled = true;
+                addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
+            }
         });
 
         reasonSelect.addEventListener("change", function () {
-            moduleSelect.disabled = reasonSelect.value === "";
+            if (this.value !== "") {
+                moduleSelect.disabled = false;
+                removeTooltip(moduleSelect);
+            } else {
+                moduleSelect.disabled = true;
+                addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
+            }
         });
 
         const systemModules = {

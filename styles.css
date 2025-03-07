@@ -104,3 +104,38 @@ button:hover {
 #fileUpload, #fileUploadWrapper {
   display: none !important;
 }
+
+/* ✅ עיצוב בסיסי ל-tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: not-allowed;
+}
+
+/* ✅ תוכן ה-tooltip */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  
+  /* ✅ מיקום ה-tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* מעל האלמנט */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* ✅ אנימציה */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* ✅ הצגת ה-tooltip כשעוברים מעל */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

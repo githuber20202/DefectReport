@@ -6,5 +6,21 @@
     "description": "h",
     "module": "מפה",
     "timestamp": "2025-03-07T21:52:43.921Z"
+  },
+  {
+    "reporterName": "1",
+    "systemName": "מערכת 1",
+    "reason": "תקלה",
+    "description": "654",
+    "module": "מפה",
+    "timestamp": "2025-03-07T22:38:13.486Z"
+  },
+  {
+    "reporterName": "321",
+    "systemName": "מערכת 1",
+    "reason": "תקלה",
+    "description": "423",
+    "module": "מפה",
+    "timestamp": "2025-03-07T22:38:48.972Z"
   }
 ]
