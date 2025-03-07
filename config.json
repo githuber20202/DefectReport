@@ -2,7 +2,7 @@
   "environments": {
     "githubPages": "https://defectreport.onrender.com",
     "local": "http://localhost:3000",
-    "production": "https://api.myproductionserver.com"
+    "production": "https://defectreport.onrender.com"
   },
   "issueTypes": [
     "תקלה קריטית",
