@@ -400,11 +400,9 @@ form > p {
 
 /* ✅ מסכים קטנים (טלפונים) */
 @media screen and (max-width: 700px) {
-  form {
-    width: 100%; 
-    max-width: 700px; /* כאן אפשר להגדיל */
+  body {
+    padding: var(--spacing-sm);
   }
-}
 
   form {
     width: 100%; /* מלוא הרוחב עם שוליים קטנים */
@@ -462,20 +460,16 @@ form > p {
 
 /* ✅ טלפונים קטנים מאוד */
 @media screen and (max-width: 360px) {
-  /* כאן אפשר להוסיף התאמות */
-}
-
-@media screen and (min-width: 481px) and (max-width: 1024px) {
-  form {
-    width: 90%;
-    max-width: 650px; /* כאן אפשר לשנות */
+  h1 {
+    font-size: 1.5rem;
+    padding-right: 50px;
   }
-}
   
   h1::after {
     width: 40px;
     height: 40px;
   }
+  
   
   .step-number {
     width: 22px;
