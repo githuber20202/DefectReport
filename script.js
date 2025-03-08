@@ -273,10 +273,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                     systemSelect.disabled = true;
                     reasonSelect.disabled = true;
                     moduleSelect.disabled = true;
+                    
+                    // איפוס סרגל התקדמות ומחווני תקינות
                     document.querySelectorAll('.field-container').forEach(container => {
                         container.classList.remove('valid');
                     });
-                    updateProgressBar(1); // איפוס סרגל ההתקדמות
+                    updateProgressBar(1);
+                    
+                    // הוספת tooltips שוב
+                    addTooltip(systemSelect, "יש למלא שם מדווח תחילה.");
+                    addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
+                    addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
                 }
             } catch (error) {
                 console.error("❌ Error submitting report:", error);
