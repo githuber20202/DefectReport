@@ -400,52 +400,61 @@ form > p {
 
 /* ✅ מסכים קטנים (טלפונים) */
 @media screen and (max-width: 700px) {
+  body {
+    padding: var(--spacing-sm);
+  }
+
   form {
-    width: 95%; /* הגדלת הרוחב באחוזים */
-    max-width: none; /* הסרת ההגבלה של רוחב מקסימלי */
-    padding: var(--spacing-md);
-    margin: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
+    width: 100%; /* מלוא הרוחב עם שוליים קטנים */
+    max-width: 500px; /* הגבלת רוחב מקסימלי */
+    margin: 0 auto; /* מרכוז הטופס */
+    padding: var(--spacing-lg); /* הגדלת הפדינג */
+    border-radius: var(--border-radius-md);
   }
   
   h1 {
     font-size: 1.8rem;
-    padding-right: 60px;
+    padding-right: 70px; /* מרווח יותר גדול לאייקון */
     margin-bottom: var(--spacing-md);
     white-space: nowrap;
   }
   
   h1::after {
-    width: 50px;
-    height: 50px;
-    right: 5px;
+    width: 60px;
+    height: 60px;
+    right: 0;
   }
   
   .progress-container {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap; /* אפשרות לגלישה */
+    gap: var(--spacing-xs);
   }
   
   .step-number {
-    width: 26px;
-    height: 26px;
-    font-size: 0.9rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
   }
   
   .step-label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    text-align: center;
   }
   
   button {
-    padding: 0.75rem;
+    padding: 0.875rem;
+    font-size: 1rem;
   }
   
   input, select, textarea {
-    padding: 0.6rem;
+    padding: 0.75rem;
     font-size: 1rem;
   }
   
   select {
-    background-position: left 0.5rem center;
+    background-position: left 0.75rem center;
+    padding-left: 2.5rem;
   }
 }
 
