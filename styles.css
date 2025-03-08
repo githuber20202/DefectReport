@@ -1,106 +1,5 @@
 
-/* ✅ מסכים קטנים (טלפונים) */
-@media screen and (max-width: 700px) {
-  body {
-    padding: 0;
-  }
-
-  form {
-    width: calc(100vw - 30px); /* ינטרל את השוליים הצדדיים */
-    max-width: none; /* הסרת הגבלת רוחב מקסימלי */
-    margin: 0 auto; /* מירכוז הטופס */
-    padding: var(--spacing-md) 15px; /* פדינג אופקי וראשי */
-    border-radius: 0; /* הסרת העיגול בקצוות */
-    box-sizing: border-box;
-  }
-  
-  h1 {
-    font-size: 1.8rem;
-    padding-right: 70px;
-    margin-bottom: var(--spacing-md);
-  }
-  
-  h1::after {
-    width: 60px;
-    height: 60px;
-    right: 5px;
-  }
-  
-  .progress-container {
-    margin-bottom: var(--spacing-lg);
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    width: 100%; /* רוחב מלא */
-  }
-  
-  .step-number {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
-  }
-  
-  .step-label {
-    font-size: 0.8rem;
-    text-align: center;
-  }
-  
-  button {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-  
-  input, select, textarea {
-    padding: 0.85rem;
-    font-size: 1rem;
-  }
-  
-  select {
-    background-position: left 0.85rem center;
-    padding-left: 2.5rem;
-  }
-}
-
-/* ✅ טלפונים קטנים מאוד */
-@media screen and (max-width: 380px) {
-  form {
-    padding: var(--spacing-md);
-  }
-
-  h1 {
-    font-size: 1.6rem;
-    padding-right: 60px;
-  }
-  
-  h1::after {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .step-number {
-    width: 28px;
-    height: 28px;
-    font-size: 0.9rem;
-  }
-  
-  .step-label {
-    font-size: 0.7rem;
-  }
-  
-  button {
-    padding: 0.9rem;
-    font-size: 0.95rem;
-  }
-  
-  input, select, textarea {
-    padding: 0.75rem;
-    font-size: 0.95rem;
-  }
-  
-  select {
-    background-position: left 0.75rem center;
-    padding-left: 2.25rem;
-  }
-}/* ✅ משתני CSS לשימוש חוזר (CSS Variables) */
+/* ✅ משתני CSS לשימוש חוזר (CSS Variables) */
 :root {
   /* צבעים */
   --primary-color: #007bff;
@@ -612,7 +511,7 @@ form > p {
   h1::after {
     width: 40px;
     height: 40px;
-  }
+  } 
   
   .step-number {
     width: 22px;
