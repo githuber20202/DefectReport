@@ -67,7 +67,7 @@ form {
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   width: 100%;
-  max-width: 480px;
+  max-width: 600;
   text-align: right;
   direction: rtl;
   position: relative;
@@ -194,7 +194,7 @@ label {
   color: var(--text-color);
 }
 
-/* ✅ שדות קלט */
+/* ✅ תיקון רוחב שדות הקלט */
 input, 
 select, 
 textarea {
@@ -206,6 +206,7 @@ textarea {
   font-size: 1rem;
   transition: all 0.3s ease;
   font-family: inherit;
+  box-sizing: border-box; /* וידוא שהפדינג כלול ברוחב */
 }
 
 /* ✅ שדות קלט - מצבים שונים */
@@ -398,11 +399,14 @@ form > p {
 /* ========== התאמות רספונסיביות ========== */
 
 /* ✅ מסכים קטנים (טלפונים) */
-@media screen and (max-width: 480px) {
-  html {
-    font-size: 14px; /* הקטנת גודל בסיס הגופן */
-  }
-  
+@media screen and (max-width: 600) {
+  form {
+    width: 95%; /* הגדלת הרוחב באחוזים */
+    max-width: none; /* הסרת ההגבלה של רוחב מקסימלי */
+    padding: var(--spacing-md);
+    margin: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+}
   form {
     max-width: 100%;
     padding: var(--spacing-md);
@@ -474,10 +478,12 @@ form > p {
   }
 }
 
-/* ✅ טאבלטים */
-@media screen and (min-width: 481px) and (max-width: 768px) {
+/* ✅ תיקון רוחב הטופס - טאבלטים */
+@media screen and (min-width: 481px) and (max-width: 1024px) {
   form {
-    max-width: 90%;
+    width: 90%;
+    max-width: 650px; /* הגדלת הרוחב במסכי טאבלט */
+    padding: var(--spacing-lg);
   }
   
   h1 {
@@ -495,6 +501,14 @@ form > p {
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   form {
     max-width: 80%;
+  }
+}
+
+/* ✅ תיקון תצוגה ב-iOS */
+@supports (-webkit-touch-callout: none) {
+  /* תיקונים ספציפיים לספארי ב-iOS */
+  body {
+    min-height: -webkit-fill-available;
   }
 }
 
