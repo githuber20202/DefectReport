@@ -504,6 +504,13 @@ form > p {
   }
 }
 
+/* ✅ תיקון רוחב הטופס - מסכים גדולים */
+@media screen and (min-width: 1025px) {
+  form {
+    max-width: 700px; /* הגדלת הרוחב המקסימלי במסכי מחשב גדולים */
+  }
+}
+
 /* ✅ תיקון תצוגה ב-iOS */
 @supports (-webkit-touch-callout: none) {
   /* תיקונים ספציפיים לספארי ב-iOS */
@@ -515,12 +522,12 @@ form > p {
 /* ✅ מצב כהה (Dark Mode) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: #fff5f5;
+    --background-color: #574747;
     --white: #e7d8d8;
     --text-color: #e0e0e0;
-    --gray-light: #2a2a2a;
-    --gray: #444;
-    --gray-dark: #888;
+    --gray-light: #fffcfc;
+    --gray: #555970;
+    --gray-dark: #868bd6;
   }
   
   h1 {
