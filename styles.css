@@ -399,16 +399,10 @@ form > p {
 /* ========== התאמות רספונסיביות ========== */
 
 /* ✅ מסכים קטנים (טלפונים) */
-@media screen and (max-width: 700) {
+@media screen and (max-width: 700px) {
   form {
     width: 95%; /* הגדלת הרוחב באחוזים */
     max-width: none; /* הסרת ההגבלה של רוחב מקסימלי */
-    padding: var(--spacing-md);
-    margin: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-}
-  form {
-    max-width: 100%;
     padding: var(--spacing-md);
     margin: var(--spacing-xs);
     border-radius: var(--border-radius-sm);
