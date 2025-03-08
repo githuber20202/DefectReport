@@ -3,27 +3,6 @@
     "local": "http://localhost:3000",
     "production": "https://defectreport.onrender.com"
   },
-  "issueTypes": [
-    "תקלה קריטית",
-    "בעיה בהתחברות",
-    "תקלה בביצועים",
-    "חוסר אמינות",
-    "באגים אסתטיים",
-    "שגיאת מערכת"
-  ],
-  "modules": [
-    "דוגמה א",
-    "דוגמה ב",
-    "דוגמה ג",
-    "דוגמה ד",
-    "דוגמה ה"
-  ],
-  "urgencyLevels": [
-    "נמוכה",
-    "בינונית",
-    "גבוהה",
-    "קריטית"
-  ],
   "systems": [
     "google-maps",
     "google-drive",
