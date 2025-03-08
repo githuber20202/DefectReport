@@ -23,5 +23,17 @@
     "בינונית",
     "גבוהה",
     "קריטית"
+  ],
+  "systems": [
+    "google-maps",
+    "google-drive",
+    "google-translate",
+    "google-sheets",
+    "google-calendar",
+    "google-chat",
+    "google-photos",
+    "google-somthing",
+    "google-piknik",
+    "google-coffe"
   ]
 }
