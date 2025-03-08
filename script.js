@@ -53,63 +53,122 @@ document.addEventListener("DOMContentLoaded", async function () {
             element.classList.remove("tooltip");
         }
 
+        // ✅ פונקציה לעדכון סרגל ההתקדמות
+        function updateProgressBar(step) {
+            // נקה את כל הסטטוסים הקודמים
+            document.querySelectorAll('.progress-step').forEach(el => {
+                el.classList.remove('active', 'completed');
+            });
+            
+            // סמן את כל השלבים שהושלמו
+            for (let i = 1; i < step; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (stepElement) {
+                    stepElement.classList.add('completed');
+                }
+            }
+            
+            // סמן את השלב הנוכחי כפעיל
+            const currentStep = document.getElementById(`step${step}`);
+            if (currentStep) {
+                currentStep.classList.add('active');
+            }
+        }
+
+        // ✅ עטוף כל שדה קלט ב-div עם מחוון תקינות
+        function wrapInputsWithContainer() {
+            const inputs = [nameInput, systemSelect, reasonSelect, moduleSelect];
+            
+            inputs.forEach(input => {
+                if (!input.parentElement.classList.contains('field-container')) {
+                    const container = document.createElement('div');
+                    container.className = 'field-container';
+                    
+                    const indicator = document.createElement('span');
+                    indicator.className = 'valid-indicator';
+                    indicator.innerHTML = '✓';
+                    
+                    input.parentNode.insertBefore(container, input);
+                    container.appendChild(input);
+                    container.appendChild(indicator);
+                }
+            });
+            
+            // גם לשדה דינמי כשנוצר
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.addedNodes.length) {
+                        const textarea = dynamicField.querySelector('textarea');
+                        if (textarea && !textarea.parentElement.classList.contains('field-container')) {
+                            const container = document.createElement('div');
+                            container.className = 'field-container';
+                            
+                            const indicator = document.createElement('span');
+                            indicator.className = 'valid-indicator';
+                            indicator.innerHTML = '✓';
+                            
+                            textarea.parentNode.insertBefore(container, textarea);
+                            container.appendChild(textarea);
+                            container.appendChild(indicator);
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(dynamicField, { childList: true, subtree: true });
+        }
+
+        // הוסף tooltips ראשוניים
         addTooltip(systemSelect, "יש למלא שם מדווח תחילה.");
         addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
         addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
 
+        // אתחול סרגל ההתקדמות והמחוונים
+        wrapInputsWithContainer();
+        updateProgressBar(1);
+
+        // ✅ מאזיני אירועים עם תמיכה בסרגל התקדמות
+
         nameInput.addEventListener("input", function () {
             if (this.value.trim() !== "") {
                 systemSelect.disabled = false;
+                systemSelect.classList.add('animated-field');
                 removeTooltip(systemSelect);
+                this.parentElement.classList.add('valid');
+                updateProgressBar(2);
             } else {
                 systemSelect.disabled = true;
+                this.parentElement.classList.remove('valid');
                 addTooltip(systemSelect, "יש למלא שם מדווח תחילה.");
+                updateProgressBar(1);
             }
         });
-
-        systemSelect.addEventListener("change", function () {
-            if (this.value !== "") {
-                reasonSelect.disabled = false;
-                removeTooltip(reasonSelect);
-            } else {
-                reasonSelect.disabled = true;
-                addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
-            }
-        });
-
-        reasonSelect.addEventListener("change", function () {
-            if (this.value !== "") {
-                moduleSelect.disabled = false;
-                removeTooltip(moduleSelect);
-            } else {
-                moduleSelect.disabled = true;
-                addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
-            }
-        });
-
-        const systemModules = {
-            "google-maps": ["כללי","מפה", "התראות", "מסננים"],
-            "google-drive": ["כללי","מפה", "התראות", "מסננים"],
-            "google-translate": ["כללי","מפה", "התראות", "מסננים"],
-            "google-sheets": ["כללי","מפה", "התראות", "מסננים"],
-            "google-calendar": ["כללי","מפה", "התראות", "מסננים"],
-            "google-chat": ["כללי","מפה", "התראות", "מסננים"],
-            "google-photos": ["כללי","מפה", "התראות", "מסננים"],
-            "google-somthing": ["כללי","מפה", "התראות", "מסננים"],
-            "google-piknik": ["כללי","מפה", "התראות", "מסננים"],
-            "google-coffe": ["כללי","מפה", "התראות", "מסננים"]
-        };
 
         systemSelect.addEventListener("change", function () {
             const selectedSystem = systemSelect.value;
-            moduleSelect.innerHTML = "<option value=''>בחר מודול...</option>";
-            if (selectedSystem && systemModules[selectedSystem]) {
-                systemModules[selectedSystem].forEach(module => {
-                    const option = document.createElement("option");
-                    option.value = module;
-                    option.textContent = module;
-                    moduleSelect.appendChild(option);
-                });
+            
+            if (selectedSystem !== "") {
+                reasonSelect.disabled = false;
+                reasonSelect.classList.add('animated-field');
+                removeTooltip(reasonSelect);
+                this.parentElement.classList.add('valid');
+                updateProgressBar(3);
+                
+                // עדכון רשימת המודולים
+                moduleSelect.innerHTML = "<option value=''>בחר מודול...</option>";
+                if (selectedSystem && systemModules[selectedSystem]) {
+                    systemModules[selectedSystem].forEach(module => {
+                        const option = document.createElement("option");
+                        option.value = module;
+                        option.textContent = module;
+                        moduleSelect.appendChild(option);
+                    });
+                }
+            } else {
+                reasonSelect.disabled = true;
+                this.parentElement.classList.remove('valid');
+                addTooltip(reasonSelect, "יש לבחור מערכת תחילה.");
+                updateProgressBar(2);
             }
         });
 
@@ -117,15 +176,23 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.log("סיבת הפנייה שנבחרה:", reasonSelect.value);
             dynamicField.innerHTML = "";
 
-            if (reasonSelect.value !== "") {
+            if (this.value !== "") {
+                moduleSelect.disabled = false;
+                moduleSelect.classList.add('animated-field');
+                removeTooltip(moduleSelect);
+                this.parentElement.classList.add('valid');
+                updateProgressBar(4);
+                
+                // יצירת שדה תיאור דינמי
                 const label = document.createElement("label");
                 label.setAttribute("for", "description");
                 const textarea = document.createElement("textarea");
                 textarea.id = "description";
                 textarea.name = "description";
                 textarea.required = true;
+                textarea.classList.add('animated-field');
 
-                switch (reasonSelect.value) {
+                switch (this.value) {
                     case "תקלה":
                         label.textContent = "תיאור שחזור התקלה:";
                         break;
@@ -138,8 +205,48 @@ document.addEventListener("DOMContentLoaded", async function () {
                 }
                 dynamicField.appendChild(label);
                 dynamicField.appendChild(textarea);
+            } else {
+                moduleSelect.disabled = true;
+                this.parentElement.classList.remove('valid');
+                addTooltip(moduleSelect, "יש לבחור סיבת פנייה תחילה.");
+                updateProgressBar(3);
             }
         });
+
+        // ✅ הוסף האזנה לשינויים בשדה המודול
+        moduleSelect.addEventListener("change", function() {
+            if (this.value !== "") {
+                this.parentElement.classList.add('valid');
+                updateProgressBar(5);
+            } else {
+                this.parentElement.classList.remove('valid');
+                updateProgressBar(4);
+            }
+        });
+
+        // ✅ הוספת האזנה לשדה התיאור הדינמי
+        dynamicField.addEventListener("input", function(e) {
+            if (e.target && e.target.tagName === "TEXTAREA") {
+                if (e.target.value.trim() !== "") {
+                    e.target.parentElement.classList.add('valid');
+                } else {
+                    e.target.parentElement.classList.remove('valid');
+                }
+            }
+        });
+
+        const systemModules = {
+            "google-maps": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-drive": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-translate": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-sheets": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-calendar": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-chat": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-photos": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-somthing": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-piknik": ["כללי", "מפה", "התראות", "מסננים"],
+            "google-coffe": ["כללי", "מפה", "התראות", "מסננים"]
+        };
 
         form.addEventListener("submit", async function (event) {
             event.preventDefault();
@@ -166,6 +273,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                     systemSelect.disabled = true;
                     reasonSelect.disabled = true;
                     moduleSelect.disabled = true;
+                    document.querySelectorAll('.field-container').forEach(container => {
+                        container.classList.remove('valid');
+                    });
+                    updateProgressBar(1); // איפוס סרגל ההתקדמות
                 }
             } catch (error) {
                 console.error("❌ Error submitting report:", error);
