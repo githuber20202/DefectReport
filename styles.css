@@ -519,6 +519,17 @@ form > p {
   }
 }
 
+/* ✅ מצב כהה (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #574747;
+    --white: #e7d8d8;
+    --text-color: #e0e0e0;
+    --gray-light: #fffcfc;
+    --gray: #555970;
+    --gray-dark: #888;
+  }
+  
   h1 {
     text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
   }
