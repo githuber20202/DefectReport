@@ -522,12 +522,12 @@ form > p {
 /* ✅ מצב כהה (Dark Mode) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: #574747;
+    --background-color: #ffffff;
     --white: #e7d8d8;
-    --text-color: #e0e0e0;
+    --text-color: #ffffff;
     --gray-light: #fffcfc;
-    --gray: #555970;
-    --gray-dark: #868bd6;
+    --gray: #ffffff;
+    --gray-dark: #5860d1;
   }
   
   h1 {
