@@ -1,79 +1,113 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="מערכת דיווח תקלות - דיווח וניהול תקלות, בקשות הרשאות והצעות ייעול">
+    <meta name="theme-color" content="#007bff">
     <title>דיווח תקלות</title>
-    <link rel="stylesheet" href="styles.css">
-        <!-- שאר התגים שלך -->
+    
+    <!-- גופנים -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- סגנונות -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form id="bugReportForm">
-        <h1>דיווח תקלות</h1>
-        <div class="progress-container">
-            <div class="progress-step" id="step1">
-                <div class="step-number">1</div>
-                <div class="step-label">שם מדווח</div>
+    <main>
+        <form id="bugReportForm">
+            <h1>דיווח תקלות</h1>
+            
+            <!-- סרגל התקדמות -->
+            <div class="progress-container">
+                <div class="progress-step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">שם מדווח</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">מערכת</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">סיבת פנייה</div>
+                </div>
+                <div class="progress-step" id="step4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">מודול</div>
+                </div>
             </div>
-            <div class="progress-step" id="step2">
-                <div class="step-number">2</div>
-                <div class="step-label">מערכת</div>
+            
+            <!-- שדות הטופס -->
+            <div class="form-group">
+                <label for="reporterName">שם מדווח:</label>
+                <input type="text" id="reporterName" name="reporterName" required 
+                       placeholder="הכנס את שמך המלא" autocomplete="name">
             </div>
-            <div class="progress-step" id="step3">
-                <div class="step-number">3</div>
-                <div class="step-label">סיבת פנייה</div>
-            </div>
-            <div class="progress-step" id="step4">
-                <div class="step-number">4</div>
-                <div class="step-label">מודול</div>
-            </div>
-        </div>
-        <label for="reporterName">שם מדווח:</label>
-        <input type="text" id="reporterName" name="reporterName" required>
 
-        <label for="systemName">שם המערכת:</label>
-        <select id="systemName" name="systemName" required>
-            <option value="">בחר מערכת...</option>
-            <option value="google-maps">google-maps</option>
-            <option value="google-drive">google-drive</option>
-            <option value="google-translate">google-translate</option>
-            <option value="google-sheets">google-sheets</option>
-            <option value="google-calendar">google-calendar</option>
-            <option value="google-chat">google-chat</option>
-            <option value="google-photos">google-photos</option>
-            <option value="google-somthing">google-somthing</option>
-            <option value="google-piknik">google-piknik</option>
-            <option value="google-coffe">google-coffe</option>
-        </select>
-        
-        <label for="reason">סיבת הפנייה:</label>
-        <select id="reason" name="reason" required>
-            <option value="">בחר סיבה...</option>
-            <option value="תקלה">תקלה</option>
-            <option value="בקשת הרשאות">בקשת הרשאות</option>
-            <option value="הצעת ייעול">הצעת ייעול</option>
-        </select>
+            <div class="form-group">
+                <label for="systemName">שם המערכת:</label>
+                <select id="systemName" name="systemName" required disabled>
+                    <option value="">בחר מערכת...</option>
+                    <option value="google-maps">Google Maps</option>
+                    <option value="google-drive">Google Drive</option>
+                    <option value="google-translate">Google Translate</option>
+                    <option value="google-sheets">Google Sheets</option>
+                    <option value="google-calendar">Google Calendar</option>
+                    <option value="google-chat">Google Chat</option>
+                    <option value="google-photos">Google Photos</option>
+                    <option value="google-somthing">Google Something</option>
+                    <option value="google-piknik">Google Picnic</option>
+                    <option value="google-coffe">Google Coffee</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">סיבת הפנייה:</label>
+                <select id="reason" name="reason" required disabled>
+                    <option value="">בחר סיבה...</option>
+                    <option value="תקלה">תקלה</option>
+                    <option value="בקשת הרשאות">בקשת הרשאות</option>
+                    <option value="הצעת ייעול">הצעת ייעול</option>
+                </select>
+            </div>
 
-        <div id="dynamicField"></div>
-        
-        <label for="module">מודול מערכת:</label>
-        <select id="module" name="module" required>
-            <option value="">בחר מודול...</option>
-        </select>
-        
-        <!-- <label for="attachment">העלאת קובץ:</label>
-        <input type="file" id="attachment" name="attachment"> -->
-        
-        <button type="submit">שלח דיווח</button>
-        <button type="button" id="downloadExcel">📥 הורדת קובץ תקלות</button>
-        
-        <p id="confirmationMessage" style="display: none; color: green;">✅ הדיווח נשמר בהצלחה!</p>
-        <p style="text-align: center; font-size: 9px; color: rgb(172, 153, 206); margin-top: 10px;">אם תרצו אין זו אגדה</p>
-        <p style="text-align: center; font-size: 8px; color: rgb(174, 164, 211); margin-top: 10px;">Theodor (Binyamin Ze'ev) Herzl</p>
-    </form>
+            <div id="dynamicField" class="form-group">
+                <!-- כאן ייווצר שדה התיאור באופן דינמי -->
+            </div>
+            
+            <div class="form-group">
+                <label for="module">מודול מערכת:</label>
+                <select id="module" name="module" required disabled>
+                    <option value="">בחר מודול...</option>
+                </select>
+            </div>
+            
+            <!-- כפתורים -->
+            <div class="button-group">
+                <button type="submit" class="btn-primary">שלח דיווח</button>
+                <button type="button" id="downloadExcel" class="btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>הורדת קובץ תקלות</span>
+                </button>
+            </div>
+            
+            <!-- הודעת אישור -->
+            <div id="confirmationMessage">✅ הדיווח נשמר בהצלחה!</div>
+            
+            <!-- ציטוט -->
+            <footer>
+                <p class="quote">.If you will it, it is no dream</p>
+                <p class="author">Theodor (Binyamin Ze'ev) Herzl</p>
+            </footer>
+        </form>
+    </main>
     
     <script src="script.js"></script>
 </body>
