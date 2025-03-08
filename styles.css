@@ -67,7 +67,7 @@ form {
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   width: 100%;
-  max-width: 600;
+  max-width: 700;
   text-align: right;
   direction: rtl;
   position: relative;
@@ -399,7 +399,7 @@ form > p {
 /* ========== התאמות רספונסיביות ========== */
 
 /* ✅ מסכים קטנים (טלפונים) */
-@media screen and (max-width: 600) {
+@media screen and (max-width: 700) {
   form {
     width: 95%; /* הגדלת הרוחב באחוזים */
     max-width: none; /* הסרת ההגבלה של רוחב מקסימלי */
@@ -515,8 +515,8 @@ form > p {
 /* ✅ מצב כהה (Dark Mode) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: #121212;
-    --white: #1e1e1e;
+    --background-color: #fff5f5;
+    --white: #e7d8d8;
     --text-color: #e0e0e0;
     --gray-light: #2a2a2a;
     --gray: #444;

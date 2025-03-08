@@ -150,5 +150,13 @@
     "description": "sda",
     "module": "כללי",
     "timestamp": "2025-03-08T16:12:05.936Z"
+  },
+  {
+    "reporterName": "כגעגכעג",
+    "systemName": "google-maps",
+    "reason": "תקלה",
+    "description": "גכעגכע",
+    "module": "כללי",
+    "timestamp": "2025-03-08T17:05:18.589Z"
   }
 ]
