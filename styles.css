@@ -1,3 +1,4 @@
+
 /* ✅ משתני CSS לשימוש חוזר (CSS Variables) */
 :root {
   /* צבעים */
@@ -406,22 +407,22 @@ form > p {
 
   form {
     width: 100%; /* מלוא הרוחב עם שוליים קטנים */
-    max-width: 500px; /* הגבלת רוחב מקסימלי */
+    max-width: none; /* הסרת הגבלת רוחב מקסימלי */
     margin: 0 auto; /* מרכוז הטופס */
-    padding: var(--spacing-lg); /* הגדלת הפדינג */
+    padding: var(--spacing-md); /* הקטנת הפדינג */
     border-radius: var(--border-radius-md);
   }
   
   h1 {
-    font-size: 1.8rem;
-    padding-right: 70px; /* מרווח יותר גדול לאייקון */
+    font-size: 1.6rem;
+    padding-right: 60px; /* מרווח יותר גדול לאייקון */
     margin-bottom: var(--spacing-md);
     white-space: nowrap;
   }
   
   h1::after {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     right: 0;
   }
   
@@ -432,29 +433,71 @@ form > p {
   }
   
   .step-number {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
   }
   
   .step-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-align: center;
   }
   
   button {
-    padding: 0.875rem;
-    font-size: 1rem;
+    padding: 0.75rem;
+    font-size: 0.95rem;
   }
   
   input, select, textarea {
-    padding: 0.75rem;
-    font-size: 1rem;
+    padding: 0.65rem;
+    font-size: 0.95rem;
   }
   
   select {
-    background-position: left 0.75rem center;
-    padding-left: 2.5rem;
+    background-position: left 0.65rem center;
+    padding-left: 2.25rem;
+  }
+}
+
+/* ✅ טלפונים קטנים מאוד */
+@media screen and (max-width: 380px) {
+  form {
+    padding: var(--spacing-sm);
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    padding-right: 50px;
+  }
+  
+  h1::after {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+  }
+  
+  .step-label {
+    font-size: 0.6rem;
+  }
+  
+  button {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+  
+  input, select, textarea {
+    padding: 0.55rem;
+    font-size: 0.9rem;
+  }
+  
+  select {
+    background-position: left 0.55rem center;
+    padding-left: 2rem;
   }
 }
 
@@ -468,8 +511,7 @@ form > p {
   h1::after {
     width: 40px;
     height: 40px;
-  }
-  
+  } 
   
   .step-number {
     width: 22px;
